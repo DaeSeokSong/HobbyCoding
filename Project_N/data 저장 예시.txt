@@ -1,0 +1,107 @@
+{
+	'participants': [{
+		'championId': 555, 챔피언 종류
+		'spell1Id': 4, d 스펠
+		'spell2Id': 14, f 스펠
+		'stats': {
+			'participantId': 1, 10명 중 몇 번째 소환사인지
+			'win': True, 팀이 이겼는지(True) 졌는지(False)
+			'item0': 2031,
+			'item1': 3117,
+			'item2': 3179,
+			'item3': 3857, item0~6 장신구랑 1~6번 아이템 칸에 뭐 있었는지
+			'item4': 3155,
+			'item5': 3082,
+			'item6': 3364,
+			'kills': 2, 몇 킬 했는지
+			'deaths': 5, 몇 데스 했는지
+			'assists': 7, 몇 어시 했는지
+			'largestKillingSpree': 0, 안죽고 킬을 최대 몇 번 연속으로 했는지
+			'largestMultiKill': 1, 연속킬을 몇 번까지 해봤는지(Ex. 2=더블킬)
+			'killingSprees': 0, 안죽고 킬을 몇 번 연속으로 했는지 (Ex. 5=안 죽고 5킬하다 1데스)
+			'longestTimeSpentLiving': 340, 안 죽고 가장 길게 살아있던 시간
+			'doubleKills': 0, 더블킬 몇 번 했는지
+			'tripleKills': 0, 트리플킬 몇 번 했는지
+			'quadraKills': 0, 쿼드라킬 몇 번 했는지
+			'pentaKills': 0, 펜타킬 몇 번 했는지
+			'unrealKills': 0, ??????????????
+			'totalDamageDealt': 19752, 적에게 가한 총 피해량
+			'magicDamageDealt': 135, 적에게 가한 마법 피해량
+			'physicalDamageDealt': 12427, 적에게 가한 물리 피해량
+			'trueDamageDealt': 7189, 적에게 가한 트루댐 피해량
+			'largestCriticalStrike': 0, 적에게 가한 가장 큰 크리티컬 피해량
+			'totalDamageDealtToChampions': 3502, 적 챔피언에게 가한 총 피해량
+			'magicDamageDealtToChampions': 135, 적 챔피언에게 가한 마법 피해량
+			'physicalDamageDealtToChampions': 2900, 적 챔피언에게 가한 마법 피해량
+			'trueDamageDealtToChampions': 466, 적 챔피언에게 가한 트루댐 피해량
+			'totalHeal': 3058, 총 힐량
+			'totalUnitsHealed': 1, ??????????
+			'damageSelfMitigated': 10984, 데미지 감소량
+			'damageDealtToObjectives': 4208, 오브젝트로부터 받은 피해
+			'damageDealtToTurrets': 2711, 포탑으로부터 받은 피해
+			'visionScore': 60, 시야 점수(와드 설치 개수 아님)
+			'timeCCingOthers': 10, ??????????????
+			'totalDamageTaken': 15150, 총 받은 피해
+			'magicalDamageTaken': 5688, 받은 마법 피해
+			'physicalDamageTaken': 9217, 받은 물리 피해
+			'trueDamageTaken': 244, 받은 트루댐 피해
+			'goldEarned': 7860, 골드 얼마나 벌었는지
+			'goldSpent': 6500, 골드를 얼마나 썼는지
+			'turretKills': 1, 파괴한 포탑의 개수
+			'inhibitorKills': 0, 파괴한 억제기 개수
+			'totalMinionsKilled': 32, 미니언 몇 마리 죽였는지
+			'neutralMinionsKilled': 1, 정글몹 몇 마리 죽였는지
+			'neutralMinionsKilledTeamJungle': 0, 아군 정글몹 잡은 개수 (바위개나 용/바론 미 포합)
+			'neutralMinionsKilledEnemyJungle': 0, 적군 정글몹 잡은 개수 (바위개나 용/바론 미 포합)
+			'totalTimeCrowdControlDealt': 82, 다른 소환사에게 CC기 사용한 총 시간(초 단위)
+			'champLevel': 13, 최종 챔프 레벨(+1 해야함)
+			'visionWardsBoughtInGame': 2, 게임 중에 제어와드 산 횟수
+			'sightWardsBoughtInGame': 0, (예전에 있던 초록색 와드 산 횟수로 추정됨)
+			'wardsPlaced': 22, 설치한 와드 수 (제어와드 및 모든 와드 포함)
+			'wardsKilled': 11, 파괴한 와드 수 (제어와드 및 모든 와드 포함)
+			'firstBloodKill': False, 퍼블을 했는지 여부
+			'firstBloodAssist': False, 퍼블에 대해 도왔는지
+			'firstTowerKill': False, 포탑 퍼블을 했는지
+			'firstTowerAssist': False, 포탑 퍼블에 대해 도왔는지
+			'firstInhibitorKill': False, 처음으로 억제기 부셨는지
+			'firstInhibitorAssist': True 처음으로 억제기 부셨을 때 도왔는지
+		},
+		'timeline': {
+			'participantId': 1,
+			'creepsPerMinDeltas': { 분당 CS, 10분 단위로
+				'10-20': 1.2,
+				'0-10': 1.1
+			},
+			'xpPerMinDeltas': { 분당 경험치, 10분 단위로
+				'10-20': 370,
+				'0-10': 272.70000000000005
+			},
+			'goldPerMinDeltas': { 분당 골드 수급, 10분 단위로
+				'10-20': 365.6,
+				'0-10': 217.2
+			},
+			'csDiffPerMinDeltas': { 분당 상대편 동일 라이너와의 CS 차이, 10분 단위로
+				'10-20': -1.4,
+				'0-10': -0.1499999999999997
+			},
+			'xpDiffPerMinDeltas': { 분당 상대편 동일 라이너와의 경험치 차이, 10분 단위로
+				'10-20': -190.75,
+				'0-10': -75.45
+			},
+			'damageTakenPerMinDeltas': { 분당 발생한 피해, 10분 단위로
+				'10-20': 734.0999999999999,
+				'0-10': 438.6
+			},
+			'damageTakenDiffPerMinDeltas': { 분당 상대편 동일 라이너와의 발생한 피해 차이, 10분 단위로
+				'10-20': 30.94999999999996,
+				'0-10': 84.1
+			}
+		}
+	}],
+	'participantIdentities': [{
+		'participantId': 1,
+		'player': {
+			'summonerName': '마 딜 러', 소환사명
+		}
+	}]
+}
