@@ -48,11 +48,12 @@ public class Board : MonoBehaviour
             for(int y=0; y<m_TileArray.GetLength(1); y++)
             {
                 Tile tile = Instantiate<Tile>(m_TileTypes[Random.Range(0, m_TileTypes.Length)].transform.GetComponent<Tile>());
+                tile.name = x.ToString() + "," + y.ToString();
 
                 // 부모 설정
                 tile.transform.SetParent(this.transform);
                 // 위치 설정
-                tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x)/2, y + (y * tile.transform.localScale.y)/2);
+                tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x) / 2, -(y + (y * tile.transform.localScale.y) / 2));
 
                 m_TileArray[x, y] = tile;
             }
