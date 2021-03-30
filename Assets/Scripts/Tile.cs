@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 // MonoBehaviour: Unity's inner class
 public class Tile : MonoBehaviour // :(콜론) = 상속
@@ -15,6 +14,16 @@ public class Tile : MonoBehaviour // :(콜론) = 상속
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.touchCount == 1)
+        {
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                Debug.Log("터치 시작");
+            }
+            else if (Input.GetTouch(0).phase == TouchPhase.Ended)
+            {
+                Debug.Log("터치 종료");
+            }
+        }
     }
 }
