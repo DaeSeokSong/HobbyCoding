@@ -5,8 +5,8 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
     // public
-    public int m_Width = 8;
-    public int m_Height = 8;
+    public static int m_Width = 8;
+    public static int m_Height = 8;
 
     // private
     // 게임 오브젝트 관련 파라미터

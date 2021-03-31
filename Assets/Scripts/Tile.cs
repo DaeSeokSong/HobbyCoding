@@ -56,7 +56,8 @@ public class Tile : MonoBehaviour // :(콜론) = 상속
         if (Mathf.Abs(MovedVector.x - Clicked_x) > Mathf.Abs(MovedVector.y - Clicked_y))
         {
             // X좌표 이동
-            if (MovedVector.x - Clicked_x > 0)
+            // +
+            if (MovedVector.x - Clicked_x > 0 && int.Parse(this.name.Split(',')[0]) < (Board.m_Width - 1))
             {
                 string targetName = (int.Parse(this.name.Split(',')[0]) + 1).ToString() + "," + this.name.Split(',')[1];
                 Debug.Log("this.name: " + this.name);
@@ -72,7 +73,8 @@ public class Tile : MonoBehaviour // :(콜론) = 상속
                 target.name = this.name;
                 this.name = targetName;
             }
-            if (MovedVector.x - Clicked_x < 0)
+            // -
+            if (MovedVector.x - Clicked_x < 0 && int.Parse(this.name.Split(',')[0]) > 0)
             {
                 string targetName = (int.Parse(this.name.Split(',')[0]) + -1).ToString() + "," + this.name.Split(',')[1];
                 Debug.Log("this.name: " + this.name);
@@ -92,7 +94,8 @@ public class Tile : MonoBehaviour // :(콜론) = 상속
         else
         {
             // Y좌표 이동
-            if (MovedVector.y - Clicked_y > 0)
+            // +
+            if (MovedVector.y - Clicked_y > 0 && int.Parse(this.name.Split(',')[1]) > 0)
             {
                 string targetName = this.name.Split(',')[0] + "," + (int.Parse(this.name.Split(',')[1]) - 1).ToString();
                 Debug.Log("this.name: " + this.name);
@@ -108,7 +111,8 @@ public class Tile : MonoBehaviour // :(콜론) = 상속
                 target.name = this.name;
                 this.name = targetName;
             }
-            if (MovedVector.y - Clicked_y < 0)
+            // -
+            if (MovedVector.y - Clicked_y < 0 && int.Parse(this.name.Split(',')[1]) < (Board.m_Height - 1))
             {
                 string targetName = this.name.Split(',')[0] + "," + (int.Parse(this.name.Split(',')[1]) + 1).ToString();
                 Debug.Log("this.name: " + this.name);
