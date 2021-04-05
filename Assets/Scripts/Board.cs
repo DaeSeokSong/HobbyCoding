@@ -7,6 +7,9 @@ public class Board : MonoBehaviour
     // public
     public static int m_Width = 8;
     public static int m_Height = 8;
+    // 게임 내 타일의 순서
+    public static string[,] m_Tiles;
+    public Tile[,] m_TileArray;
 
     // private
     // 게임 오브젝트 관련 파라미터
@@ -17,7 +20,6 @@ public class Board : MonoBehaviour
     private GameObject m_TileOrange;
     private GameObject m_TileYellow;
     private GameObject[] m_TileTypes;
-    private Tile[,] m_TileArray;
 
     // Start is called before the first frame update
     void Start()
@@ -42,12 +44,17 @@ public class Board : MonoBehaviour
     {
         // 실제 타일 배열 초기화
         m_TileArray = new Tile[m_Width, m_Height];
+        // 타일의 순서 배열 초기화
+        m_Tiles = new string[m_Width, m_Height];
 
         for (int x=0; x<m_TileArray.GetLength(0); x++)
         {
             for(int y=0; y<m_TileArray.GetLength(1); y++)
             {
-                Tile tile = Instantiate<Tile>(m_TileTypes[Random.Range(0, m_TileTypes.Length)].transform.GetComponent<Tile>());
+                GameObject tmpObj = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
+                m_Tiles[x, y] = tmpObj.name;
+
+                Tile tile = Instantiate<Tile>(tmpObj.transform.GetComponent<Tile>());
                 tile.name = x.ToString() + "," + y.ToString();
 
                 // 부모 설정
