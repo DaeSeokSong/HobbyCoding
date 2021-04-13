@@ -20,12 +20,16 @@ public class Board : MonoBehaviour
     private GameObject[] m_TileTypes;
     private Tile[,] m_TileArray;
     // 좌표 관련 파라미터
+    private BoardController m_BoardController;
     private int m_movedX, m_movedY;
     private int m_targetX, m_targetY;
 
     // Start is called before the first frame update
     void Start()
     {
+        // 좌표 컨트롤용 객체 생성
+        m_BoardController = new BoardController();
+
         // Prefab = 제작틀(거푸집), 게임 오브젝트를 동일하게 다수 생성 가능
         // 게임 오브젝트 종류 초기화
         m_TileRed = Resources.Load("Prefabs/CandyRed") as GameObject;
@@ -187,12 +191,11 @@ public class Board : MonoBehaviour
     }
 
     private void SwapPosition()
-    { 
+    {
         Tile movedTile = m_TileArray[m_movedX, m_movedY];
         Tile targetTile = m_TileArray[m_targetX, m_targetY];
 
-        movedTile.SetMovedTo(targetTile.transform.position);
-        //targetTile.SetMovedTo(movedTile.transform.position);
+        m_BoardController.DoCoSwapTiles(movedTile, targetTile);
     }
 
     private void SwapIdx()

@@ -12,37 +12,13 @@ public class Tile : MonoBehaviour // :(콜론) = 상속
     public const int UP = 3;
     public const int DOWN = 4;
     public bool MATCH = false;
+    public TileBehaivour TileBehaivour = new TileBehaivour();
 
     // Private
-    private TileBehaivour m_tileBehaivour;
     private Vector2 m_clickedVec;
     private Vector2 m_movedVec;
-    private Vector3 m_movedTo;
-    private float m_duration;
     private int x;
     private int y;
-
-    void Start()
-    {
-        m_tileBehaivour = new TileBehaivour(this.transform);
-        m_movedTo = Vector3.zero;
-
-        // 블럭 이동 시간
-        m_duration = 0.5f;
-    }
-
-    void Update()
-    {
-        if (m_movedTo != Vector3.zero)
-        {
-            m_tileBehaivour.StartCoroutine(m_tileBehaivour.MoveTo(this, m_movedTo, m_duration));
-        }
-    }
-
-    public void SetMovedTo(Vector3 to)
-    {
-        this.m_movedTo = to;
-    }
 
     private void OnMouseDown()
     {
