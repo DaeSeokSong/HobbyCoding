@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -20,16 +19,12 @@ public class Board : MonoBehaviour
     private GameObject[] m_TileTypes;
     private Tile[,] m_TileArray;
     // 좌표 관련 파라미터
-    private BoardController m_BoardController;
     private int m_movedX, m_movedY;
     private int m_targetX, m_targetY;
 
     // Start is called before the first frame update
     void Start()
     {
-        // 좌표 컨트롤용 객체 생성
-        m_BoardController = new BoardController();
-
         // Prefab = 제작틀(거푸집), 게임 오브젝트를 동일하게 다수 생성 가능
         // 게임 오브젝트 종류 초기화
         m_TileRed = Resources.Load("Prefabs/CandyRed") as GameObject;
@@ -74,9 +69,9 @@ public class Board : MonoBehaviour
         // 실제 타일 배열 초기화
         m_TileArray = new Tile[m_Width, m_Height];
 
-        for (int x=0; x<m_TileArray.GetLength(0); x++)
+        for (int x = 0; x < m_TileArray.GetLength(0); x++)
         {
-            for(int y=0; y<m_TileArray.GetLength(1); y++)
+            for (int y = 0; y < m_TileArray.GetLength(1); y++)
             {
                 GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
                 Tile tile = Instantiate<Tile>(prefab.transform.GetComponent<Tile>());
@@ -195,7 +190,8 @@ public class Board : MonoBehaviour
         Tile movedTile = m_TileArray[m_movedX, m_movedY];
         Tile targetTile = m_TileArray[m_targetX, m_targetY];
 
-        m_BoardController.DoCoSwapTiles(movedTile, targetTile);
+        movedTile.SetMovedTo(targetTile.transform.position);
+        //targetTile.SetMovedTo(movedTile.transform.position);
     }
 
     private void SwapIdx()
@@ -254,6 +250,11 @@ public class Board : MonoBehaviour
             }
         }
 
+        for (int i=0; i< matchList.Count; i++)
+        {
+            Debug.Log(matchList[i].name);
+        }
+
         // 타일의 Match 상태 변경
         return UpdateMatchStateOfTiles(matchList);
     }
@@ -274,7 +275,7 @@ public class Board : MonoBehaviour
     private bool IsExistMatchUpOthers()
     {
         bool result = false;
-        
+
         for (int x = 0; x < m_Width; x++)
             for (int y = 0; y < m_Height; y++)
             {
