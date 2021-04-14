@@ -206,57 +206,61 @@ public class Board : MonoBehaviour
         List<Tile> matchList = new List<Tile>();
         matchList.Add(m_TileArray[m_targetX, m_targetY]);
 
-        // 움직인 타일(moved)의 "y = x 함수" MatchUp 검사
-        for (int x = 0; x < m_Width - 1; x++)
-        {
-            if (x != m_targetX)
-            {
-                if (m_TileArray[m_targetX, m_targetY] == m_TileArray[x, m_targetY]) matchList.Add(m_TileArray[x, m_targetY]);
-                else break;
-            }
-        }
-
-        // 움직인 타일(moved)의 "x = y 함수" MatchUp 검사
-        for (int y = 0; y < m_Height - 1; y++)
-        {
-            if (y != m_targetY)
-            {
-                if (m_TileArray[m_targetX, m_targetY] == m_TileArray[m_targetX, y]) matchList.Add(m_TileArray[m_targetX, y]);
-                else break;
-            }
-        }
+        MatchUpX(matchList);
+        MatchUpY(matchList);
 
         // 움직여진 타일(target)의 MatchUp 검사
-        if (m_TileArray[m_movedX, m_movedY].DIRECTION > 0 && m_TileArray[m_movedX, m_movedY].DIRECTION <= 2)
-        {
-            for (int x = 0; x < m_Width - 1; x++)
-            {
-                if (x != m_movedX)
-                {
-                    if (m_TileArray[m_movedX, m_movedY] == m_TileArray[x, m_movedY]) matchList.Add(m_TileArray[x, m_movedY]);
-                    else break;
-                }
-            }
-        }
-        else if (m_TileArray[m_movedX, m_movedY].DIRECTION > 2 && m_TileArray[m_movedX, m_movedY].DIRECTION <= 4)
-        {
-            for (int y = 0; y < m_Height - 1; y++)
-            {
-                if (y != m_movedY)
-                {
-                    if (m_TileArray[m_movedX, m_movedY] == m_TileArray[m_movedX, y]) matchList.Add(m_TileArray[m_movedX, y]);
-                    else break;
-                }
-            }
-        }
-
-        for (int i=0; i< matchList.Count; i++)
-        {
-            Debug.Log(matchList[i].name);
-        }
+        if (m_TileArray[m_movedX, m_movedY].DIRECTION > 0 && m_TileArray[m_movedX, m_movedY].DIRECTION <= 2) MatchUpY(matchList);
+        else if (m_TileArray[m_movedX, m_movedY].DIRECTION > 2 && m_TileArray[m_movedX, m_movedY].DIRECTION <= 4) MatchUpX(matchList);
 
         // 타일의 Match 상태 변경
         return UpdateMatchStateOfTiles(matchList);
+    }
+
+    private void MatchUpX(List<Tile> matchList)
+    {
+        // "왼쪽" MatchUp 검사
+        for (int x = m_targetX - 1; x > 0; x--)
+        {
+            if (x != m_targetX)
+            {
+                if (m_TileArray[m_targetX, m_targetY].name.Equals(m_TileArray[x, m_targetY].name) && !matchList.Contains(m_TileArray[x, m_targetY])) matchList.Add(m_TileArray[x, m_targetY]);
+                else break;
+            }
+        }
+
+        // "오른쪽" MatchUp 검사
+        for (int x = m_targetX + 1; x < m_Width; x++)
+        {
+            if (x != m_targetX)
+            {
+                if (m_TileArray[m_targetX, m_targetY].name.Equals(m_TileArray[x, m_targetY].name) && !matchList.Contains(m_TileArray[x, m_targetY])) matchList.Add(m_TileArray[x, m_targetY]);
+                else break;
+            }
+        }
+    }
+
+    private void MatchUpY(List<Tile> matchList)
+    {
+        // "아래쪽" MatchUp 검사
+        for (int y = m_targetY - 1; y > 0; y--)
+        {
+            if (y != m_targetY)
+            {
+                if (m_TileArray[m_targetX, m_targetY].name.Equals(m_TileArray[m_targetX, y].name) && !matchList.Contains(m_TileArray[m_targetX, y])) matchList.Add(m_TileArray[m_targetX, y]);
+                else break;
+            }
+        }
+
+        // "위쪽" MatchUp 검사
+        for (int y = m_targetY + 1; y < m_Height; y++)
+        {
+            if (y != m_targetY)
+            {
+                if (m_TileArray[m_targetX, m_targetY].name.Equals(m_TileArray[m_targetX, y].name) && !matchList.Contains(m_TileArray[m_targetX, y])) matchList.Add(m_TileArray[m_targetX, y]);
+                else break;
+            }
+        }
     }
 
     private bool UpdateMatchStateOfTiles(List<Tile> matchList)
