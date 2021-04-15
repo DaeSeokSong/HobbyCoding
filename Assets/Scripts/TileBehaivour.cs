@@ -8,7 +8,8 @@ public class TileBehaivour : MonoBehaviour
     // MonoBehaviour
     private MonoBehaviour m_MonoBehaviour;
 
-    Transform m_Container;          //컨테이저 (Board GameObject)
+    // 컨테이너 (Board GameObject)
+    Transform m_Container;
 
     public TileBehaivour(Transform container)
     {
@@ -33,9 +34,7 @@ public class TileBehaivour : MonoBehaviour
 
             yield return null;
         }
-
         moved.transform.position = to;
-        moved.SetMovedTo(Vector3.zero);
 
         yield break;
     }

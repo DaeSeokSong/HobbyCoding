@@ -5,6 +5,7 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
     // Public
+    public static Tile[,] m_TileArray;
     public static int m_Width = 8;
     public static int m_Height = 8;
 
@@ -17,10 +18,6 @@ public class Board : MonoBehaviour
     private GameObject m_TileOrange;
     private GameObject m_TileYellow;
     private GameObject[] m_TileTypes;
-    private Tile[,] m_TileArray;
-    // 좌표 관련 파라미터
-    private int m_movedX, m_movedY;
-    private int m_targetX, m_targetY;
 
     // Start is called before the first frame update
     void Start()
@@ -36,29 +33,6 @@ public class Board : MonoBehaviour
         m_TileTypes = new GameObject[] { m_TileRed, m_TileBlue, m_TileGreen, m_TilePurple, m_TileOrange, m_TileYellow };
 
         CreateTiles();
-    }
-
-    void Update()
-    {
-        // 움직인 타일이 존재할 때
-        if (IsExistMovedTile())
-        {
-            // 타일 이동
-            MoveTile();
-
-            if (IsMatchUpTile())
-            {
-                // MatchUp된 타일이 있을 때
-            }
-            else
-            {
-                // MatchUp된 타일이 없을 때 (타일 제자리)
-                SwapPosition();
-                SwapIdx();
-            }
-
-            InitDirectionZero();
-        }
     }
 
     /// <summary>
@@ -91,201 +65,18 @@ public class Board : MonoBehaviour
         }
     }
 
-    private void InitDirectionZero()
+    public static Tile GetTile(int x, int y) { return m_TileArray[x, y]; }
+
+    public static void SwapIdx(Tile moved, Tile to)
     {
-        m_TileArray[m_movedX, m_movedY].DIRECTION = 0;
-        m_TileArray[m_targetX, m_targetY].DIRECTION = 0;
-    }
+        m_TileArray[moved.GetX(), moved.GetY()] = to;
+        m_TileArray[to.GetX(), to.GetY()] = moved;
 
-    private void SetMoved(int x, int y)
-    {
-        this.m_movedX = x;
-        this.m_movedY = y;
-    }
-
-    private void SetTarget(int x, int y)
-    {
-        this.m_targetX = x;
-        this.m_targetY = y;
-        if (m_TileArray[m_movedX, m_movedY].DIRECTION % 2 == 1) m_TileArray[m_targetX, m_targetY].DIRECTION = m_TileArray[m_movedX, m_movedY].DIRECTION + 1;
-        else m_TileArray[m_targetX, m_targetY].DIRECTION = m_TileArray[m_movedX, m_movedY].DIRECTION - 1;
-    }
-
-    /// <summary>
-    /// 이동시킬 타일이 있는지 확인한다.
-    /// </summary>
-    /// <returns>movedTile is exist then return true / or return false</returns>
-    private bool IsExistMovedTile()
-    {
-        bool result = false;
-
-        for (int x = 0; x < m_Width; x++)
-            for (int y = 0; y < m_Height; y++)
-            {
-                if (m_TileArray[x, y].DIRECTION != 0)
-                {
-                    SetMoved(x, y);
-                    result = true;
-                }
-            }
-
-        return result;
-    }
-
-    private void MoveTile()
-    {
-        switch (m_TileArray[m_movedX, m_movedY].DIRECTION)
-        {
-            case Tile.RIGHT:
-                if (m_movedX + 1 < m_Width)
-                {
-                    SetTarget(m_movedX + 1, m_movedY);
-                    SwapPosition();
-                    SwapIdx();
-                }
-                else break;
-
-                break;
-
-            case Tile.LEFT:
-                if (m_movedX - 1 > 0)
-                {
-                    SetTarget(m_movedX - 1, m_movedY);
-                    SwapPosition();
-                    SwapIdx();
-                }
-                else break;
-
-                break;
-
-            case Tile.UP:
-                if (m_movedY + 1 < m_Height)
-                {
-                    SetTarget(m_movedX, m_movedY + 1);
-                    SwapPosition();
-                    SwapIdx();
-                }
-                else break;
-
-                break;
-
-            case Tile.DOWN:
-                if (m_movedY - 1 > 0)
-                {
-                    SetTarget(m_movedX, m_movedY - 1);
-                    SwapPosition();
-                    SwapIdx();
-                }
-                else break;
-
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    private void SwapPosition()
-    {
-        Tile movedTile = m_TileArray[m_movedX, m_movedY];
-        Tile targetTile = m_TileArray[m_targetX, m_targetY];
-
-        movedTile.SetMovedTo(targetTile.transform.position);
-        //targetTile.SetMovedTo(movedTile.transform.position);
-    }
-
-    private void SwapIdx()
-    {
-        Tile tmpTile = m_TileArray[m_movedX, m_movedY];
-        m_TileArray[m_movedX, m_movedY] = m_TileArray[m_targetX, m_targetY];
-        m_TileArray[m_targetX, m_targetY] = tmpTile;
-    }
-
-    private bool IsMatchUpTile()
-    {
-        List<Tile> matchList = new List<Tile>();
-        matchList.Add(m_TileArray[m_targetX, m_targetY]);
-
-        MatchUpX(matchList);
-        MatchUpY(matchList);
-
-        // 움직여진 타일(target)의 MatchUp 검사
-        if (m_TileArray[m_movedX, m_movedY].DIRECTION > 0 && m_TileArray[m_movedX, m_movedY].DIRECTION <= 2) MatchUpY(matchList);
-        else if (m_TileArray[m_movedX, m_movedY].DIRECTION > 2 && m_TileArray[m_movedX, m_movedY].DIRECTION <= 4) MatchUpX(matchList);
-
-        // 타일의 Match 상태 변경
-        return UpdateMatchStateOfTiles(matchList);
-    }
-
-    private void MatchUpX(List<Tile> matchList)
-    {
-        // "왼쪽" MatchUp 검사
-        for (int x = m_targetX - 1; x > 0; x--)
-        {
-            if (x != m_targetX)
-            {
-                if (m_TileArray[m_targetX, m_targetY].name.Equals(m_TileArray[x, m_targetY].name) && !matchList.Contains(m_TileArray[x, m_targetY])) matchList.Add(m_TileArray[x, m_targetY]);
-                else break;
-            }
-        }
-
-        // "오른쪽" MatchUp 검사
-        for (int x = m_targetX + 1; x < m_Width; x++)
-        {
-            if (x != m_targetX)
-            {
-                if (m_TileArray[m_targetX, m_targetY].name.Equals(m_TileArray[x, m_targetY].name) && !matchList.Contains(m_TileArray[x, m_targetY])) matchList.Add(m_TileArray[x, m_targetY]);
-                else break;
-            }
-        }
-    }
-
-    private void MatchUpY(List<Tile> matchList)
-    {
-        // "아래쪽" MatchUp 검사
-        for (int y = m_targetY - 1; y > 0; y--)
-        {
-            if (y != m_targetY)
-            {
-                if (m_TileArray[m_targetX, m_targetY].name.Equals(m_TileArray[m_targetX, y].name) && !matchList.Contains(m_TileArray[m_targetX, y])) matchList.Add(m_TileArray[m_targetX, y]);
-                else break;
-            }
-        }
-
-        // "위쪽" MatchUp 검사
-        for (int y = m_targetY + 1; y < m_Height; y++)
-        {
-            if (y != m_targetY)
-            {
-                if (m_TileArray[m_targetX, m_targetY].name.Equals(m_TileArray[m_targetX, y].name) && !matchList.Contains(m_TileArray[m_targetX, y])) matchList.Add(m_TileArray[m_targetX, y]);
-                else break;
-            }
-        }
-    }
-
-    private bool UpdateMatchStateOfTiles(List<Tile> matchList)
-    {
-        bool result = false;
-
-        if (matchList.Count > 2)
-        {
-            for (int idx = 0; idx < matchList.Count; idx++) matchList[idx].MATCH = true;
-            result = true;
-        }
-
-        return result;
-    }
-
-    private bool IsExistMatchUpOthers()
-    {
-        bool result = false;
-
-        for (int x = 0; x < m_Width; x++)
-            for (int y = 0; y < m_Height; y++)
-            {
-
-            }
-
-        return result;
+        int tmpX = moved.GetX();
+        int tmpY = moved.GetY();
+        moved.SetX(to.GetX());
+        moved.SetY(to.GetY());
+        to.SetX(tmpX);
+        to.SetY(tmpY);
     }
 }
