@@ -7,9 +7,10 @@ public class TileBehaivour : MonoBehaviour
     // Private
     // MonoBehaviour
     private MonoBehaviour m_MonoBehaviour;
-
     // 컨테이너 (Board GameObject)
-    Transform m_Container;
+    private Transform m_Container;
+    // IsRunning
+    private int m_IsRunningMove = 0;
 
     public TileBehaivour(Transform container)
     {
@@ -22,20 +23,61 @@ public class TileBehaivour : MonoBehaviour
         return m_MonoBehaviour.StartCoroutine(routine);
     }
 
-    public IEnumerator MoveTo(Tile moved, Vector3 to, float duration)
+    public void InitRunningMove() { this.m_IsRunningMove = 0; }
+
+    public IEnumerator CoStartMove(Tile moved, Tile to)
     {
+        while (m_IsRunningMove > 2) yield return null;
+        m_IsRunningMove++;
+
         Vector2 startPos = moved.transform.position;
 
         float elapsed = 0.0f;
-        while (elapsed < duration)
+        while (elapsed < TileStatus.DURATION)
         {
             elapsed += Time.smoothDeltaTime;
-            moved.transform.position = Vector2.Lerp(startPos, to, elapsed / duration);
+            moved.transform.position = Vector2.Lerp(startPos, to.transform.position, elapsed / TileStatus.DURATION);
 
             yield return null;
         }
-        moved.transform.position = to;
+        moved.transform.position = to.transform.position;
+        moved.transform.position = new Vector3((1.5f * moved.GetX()), (1.5f * moved.GetY()), 0);
+
+        yield break;
+
+        m_IsRunningMove--;
+    }
+
+    public IEnumerator CoStartDestroy(Tile destroyedTile)
+    {
+        // 크기가 줄어드는 액션 : 1 -> 0.3(TileStatus.DESTROY_SCALE)으로 줄어든다.
+        yield return Scale(destroyedTile.transform, TileStatus.DESTROY_SCALE, TileStatus.DESTROY_SPEED);
+
+        // 바로 삭제되는 거 지연
+        yield return new WaitForSeconds(0.1f);
+
+        // 블럭 GameObject 객체 삭제 or make size zero
+        Destroy(destroyedTile.gameObject);
+    }
+
+    public static IEnumerator Scale(Transform target, float toScale, float speed)
+    {
+        // 이동 중에 삭제되는 거 방지
+        yield return new WaitForSeconds(TileStatus.DURATION);
+
+        float factor;
+
+        while (true)
+        {
+            factor = Time.deltaTime * speed * -1;
+            target.localScale = new Vector3(target.localScale.x + factor, target.localScale.y + factor, target.localScale.z);
+
+            if (target.localScale.x <= toScale) break;
+
+            yield return null;
+        }
 
         yield break;
     }
+
 }

@@ -5,9 +5,13 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
     // Public
-    public static Tile[,] m_TileArray;
-    public static int m_Width = 8;
-    public static int m_Height = 8;
+    // 타일 리스트
+    public static Tile[,] TileArray;
+    // MatchUp 리스트
+    public static List<Tile> MatchList = new List<Tile>();
+    // 가로/세로 길이
+    public static int Width = 8;
+    public static int Height = 8;
 
     // Private
     // 게임 오브젝트 관련 파라미터
@@ -41,11 +45,11 @@ public class Board : MonoBehaviour
     private void CreateTiles()
     {
         // 실제 타일 배열 초기화
-        m_TileArray = new Tile[m_Width, m_Height];
+        TileArray = new Tile[Width, Height];
 
-        for (int x = 0; x < m_TileArray.GetLength(0); x++)
+        for (int x = 0; x < TileArray.GetLength(0); x++)
         {
-            for (int y = 0; y < m_TileArray.GetLength(1); y++)
+            for (int y = 0; y < TileArray.GetLength(1); y++)
             {
                 GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
                 Tile tile = Instantiate<Tile>(prefab.transform.GetComponent<Tile>());
@@ -60,17 +64,17 @@ public class Board : MonoBehaviour
                 // 위치 설정
                 tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x) / 2, y + (y * tile.transform.localScale.y) / 2);
 
-                m_TileArray[x, y] = tile;
+                TileArray[x, y] = tile;
             }
         }
     }
 
-    public static Tile GetTile(int x, int y) { return m_TileArray[x, y]; }
+    public static Tile GetTile(int x, int y) { return TileArray[x, y]; }
 
     public static void SwapIdx(Tile moved, Tile to)
     {
-        m_TileArray[moved.GetX(), moved.GetY()] = to;
-        m_TileArray[to.GetX(), to.GetY()] = moved;
+        TileArray[moved.GetX(), moved.GetY()] = to;
+        TileArray[to.GetX(), to.GetY()] = moved;
 
         int tmpX = moved.GetX();
         int tmpY = moved.GetY();
@@ -78,5 +82,10 @@ public class Board : MonoBehaviour
         moved.SetY(to.GetY());
         to.SetX(tmpX);
         to.SetY(tmpY);
+    }
+
+    private void CreateReplaceTiles()
+    {
+
     }
 }
