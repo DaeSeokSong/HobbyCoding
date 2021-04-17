@@ -137,6 +137,7 @@ public class Tile : MonoBehaviour
         {
             // MatchUped Tile set up for Destroy
             SetUpDestroy();
+            m_TileBehaivour.StartCoroutine(ReplaceTile());
         }
         else
         {
@@ -223,8 +224,11 @@ public class Tile : MonoBehaviour
 
     private void SetUpDestroy()
     {
-        for (int idx = 0; idx < Board.MatchList.Count; idx++) Board.MatchList[idx].Destroy();
-        Board.MatchList.Clear();
+        for (int idx = 0; idx < Board.MatchList.Count; idx++)
+        {
+            Tile destroiedTile = Board.MatchList[idx];
+            destroiedTile.Destroy();
+        }
     }
 
     public void Destroy()
@@ -235,5 +239,26 @@ public class Tile : MonoBehaviour
     private IEnumerator CoDoDestroy()
     {
         return m_TileBehaivour.CoStartDestroy(this);
+    }
+
+    private IEnumerator ReplaceTile()
+    {
+        if (Board.MatchList.Count != 0) yield return null;
+        Board.MOVEDOWN = true;
+
+        yield break;
+    }
+
+    public void MoveDown(int downScale)
+    {
+        // Activate this Tile
+        this.gameObject.SetActive(true);
+
+        // Compute DownTo Vector2
+        Vector2 downTo = new Vector2(this.transform.position.x, this.transform.position.y - (downScale * TileStatus.DIAMETER));
+
+        // Move Down
+        if (m_TileBehaivour == null) m_TileBehaivour = new TileBehaivour(this.transform);
+        m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMoveDown(this, downTo));
     }
 }

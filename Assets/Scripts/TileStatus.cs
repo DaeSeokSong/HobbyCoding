@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class TileStatus : MonoBehaviour
 {
+    // Scale
+    public const float DIAMETER = 1.5f;
+
     // Move
     // Move Direction
     public const int RIGHT = 1;

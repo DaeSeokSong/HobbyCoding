@@ -11,6 +11,7 @@ public class TileBehaivour : MonoBehaviour
     private Transform m_Container;
     // IsRunning
     private int m_IsRunningMove = 0;
+    private int m_IsRunningMoveDown = 0;
 
     public TileBehaivour(Transform container)
     {
@@ -27,7 +28,7 @@ public class TileBehaivour : MonoBehaviour
 
     public IEnumerator CoStartMove(Tile moved, Tile to)
     {
-        while (m_IsRunningMove > 2) yield return null;
+        if (m_IsRunningMove > 2) yield return null;
         m_IsRunningMove++;
 
         Vector2 startPos = moved.transform.position;
@@ -56,11 +57,15 @@ public class TileBehaivour : MonoBehaviour
         // 바로 삭제되는 거 지연
         yield return new WaitForSeconds(0.1f);
 
+        // 삭제
+        destroyedTile.DESTROY = true;
+        Board.MatchList.Remove(destroyedTile);
+
         // 블럭 GameObject 객체 삭제 or make size zero
         Destroy(destroyedTile.gameObject);
     }
 
-    public static IEnumerator Scale(Transform target, float toScale, float speed)
+    private static IEnumerator Scale(Transform target, float toScale, float speed)
     {
         // 이동 중에 삭제되는 거 방지
         yield return new WaitForSeconds(TileStatus.DURATION);
@@ -80,4 +85,23 @@ public class TileBehaivour : MonoBehaviour
         yield break;
     }
 
+    public IEnumerator CoStartMoveDown(Tile moved, Vector2 to)
+    {
+        // 이동 및 삭제 중에 MoveDown되는 거 방지
+        yield return new WaitForSeconds(TileStatus.DURATION);
+
+        Vector2 startPos = moved.transform.position;
+
+        float elapsed = 0.0f;
+        while (elapsed < TileStatus.DURATION)
+        {
+            elapsed += Time.smoothDeltaTime;
+            moved.transform.position = Vector2.Lerp(startPos, to, elapsed / TileStatus.DURATION);
+
+            yield return null;
+        }
+        moved.transform.position = to;
+
+        yield break;
+    }
 }

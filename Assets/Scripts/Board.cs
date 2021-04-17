@@ -12,6 +12,7 @@ public class Board : MonoBehaviour
     // 가로/세로 길이
     public static int Width = 8;
     public static int Height = 8;
+    public static bool MOVEDOWN = false;
 
     // Private
     // 게임 오브젝트 관련 파라미터
@@ -39,20 +40,58 @@ public class Board : MonoBehaviour
         CreateTiles();
     }
 
+    void Update()
+    {
+        if (MOVEDOWN)
+        {
+            ReplaceTiles();
+            ArrangeReplaceTiles();
+        }
+    }
+
     /// <summary>
     /// Prefab 이용하여 새로운 Tile 생성
     /// </summary>
     private void CreateTiles()
     {
         // 실제 타일 배열 초기화
-        TileArray = new Tile[Width, Height];
+        TileArray = new Tile[Width, Height * 2];
 
-        for (int x = 0; x < TileArray.GetLength(0); x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < TileArray.GetLength(1); y++)
+            for (int y = 0; y < Height; y++)
             {
                 GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
                 Tile tile = Instantiate<Tile>(prefab.transform.GetComponent<Tile>());
+                tile.name = prefab.name;
+
+                // 좌표 설정
+                tile.SetX(x);
+                tile.SetY(y);
+
+                // 부모 설정
+                tile.transform.SetParent(this.transform);
+                // 위치 설정
+                tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x) / 2, y + (y * tile.transform.localScale.y) / 2);
+
+                TileArray[x, y] = tile;
+            }
+        }
+
+        ArrangeReplaceTiles();
+    }
+
+    private void ArrangeReplaceTiles()
+    {
+        for (int x = 0; x < Width; x++)
+        {
+            // MoveDown용 타일 생성 (Active = false)
+            for (int y = Height; y < Height * 2; y++)
+            {
+                GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
+                Tile tile = Instantiate<Tile>(prefab.transform.GetComponent<Tile>());
+                // 비활성화 상태로 대기
+                tile.gameObject.SetActive(false);
                 tile.name = prefab.name;
 
                 // 좌표 설정
@@ -84,8 +123,31 @@ public class Board : MonoBehaviour
         to.SetY(tmpY);
     }
 
-    private void CreateReplaceTiles()
+    public static void ReplaceTiles()
     {
+        int startMoveDownIdxY = 0;
+        for (int x = 0; x < Width; x++)
+        {
+            int moveDownCnt = 0;
+            for (int y = 0; y < Height; y++)
+            {
+                if (TileArray[x, y].DESTROY)
+                {
+                    moveDownCnt++;
+                    startMoveDownIdxY = y;
+                }
+            }
 
+            if (moveDownCnt != 0)
+            {
+                for (int idx = startMoveDownIdxY + 1; idx < Height + moveDownCnt; idx++)
+                { 
+                    TileArray[x, idx].MoveDown(moveDownCnt);
+                    TileArray[x, idx - moveDownCnt] = TileArray[x, idx];
+                    TileArray[x, idx - moveDownCnt].SetX(x);
+                    TileArray[x, idx - moveDownCnt].SetY(idx - moveDownCnt);
+                }
+            }
+        }
     }
 }
