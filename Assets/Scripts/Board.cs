@@ -5,17 +5,18 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
     // Public
-    // 타일 리스트
+    // Tile List
     public static Tile[,] TileArray;
-    // MatchUp 리스트
+    // MatchUp List
     public static List<Tile> MatchList = new List<Tile>();
-    // 가로/세로 길이
+    // IsMoveDown?
+    public static bool MOVEDOWN = false;
+    // Width, Height
     public static int Width = 8;
     public static int Height = 8;
-    public static bool MOVEDOWN = false;
 
     // Private
-    // 게임 오브젝트 관련 파라미터
+    // Prefabs
     private GameObject m_TileRed;
     private GameObject m_TileBlue;
     private GameObject m_TileGreen;
@@ -27,8 +28,7 @@ public class Board : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Prefab = 제작틀(거푸집), 게임 오브젝트를 동일하게 다수 생성 가능
-        // 게임 오브젝트 종류 초기화
+        // Init Prefab
         m_TileRed = Resources.Load("Prefabs/CandyRed") as GameObject;
         m_TileBlue = Resources.Load("Prefabs/CandyBlue") as GameObject;
         m_TileGreen = Resources.Load("Prefabs/CandyGreen") as GameObject;
@@ -42,72 +42,18 @@ public class Board : MonoBehaviour
 
     void Update()
     {
-        if (MOVEDOWN)
-        {
-            ReplaceTiles();
-            ArrangeReplaceTiles();
-        }
+        if (MOVEDOWN) ReplaceTiles();
     }
 
+    /*
+     * =================================================== public ===================================================
+     */
     /// <summary>
-    /// Prefab 이용하여 새로운 Tile 생성
+    /// Get specific Tile about X, Y
     /// </summary>
-    private void CreateTiles()
-    {
-        // 실제 타일 배열 초기화
-        TileArray = new Tile[Width, Height * 2];
-
-        for (int x = 0; x < Width; x++)
-        {
-            for (int y = 0; y < Height; y++)
-            {
-                GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
-                Tile tile = Instantiate<Tile>(prefab.transform.GetComponent<Tile>());
-                tile.name = prefab.name;
-
-                // 좌표 설정
-                tile.SetX(x);
-                tile.SetY(y);
-
-                // 부모 설정
-                tile.transform.SetParent(this.transform);
-                // 위치 설정
-                tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x) / 2, y + (y * tile.transform.localScale.y) / 2);
-
-                TileArray[x, y] = tile;
-            }
-        }
-
-        ArrangeReplaceTiles();
-    }
-
-    private void ArrangeReplaceTiles()
-    {
-        for (int x = 0; x < Width; x++)
-        {
-            // MoveDown용 타일 생성 (Active = false)
-            for (int y = Height; y < Height * 2; y++)
-            {
-                GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
-                Tile tile = Instantiate<Tile>(prefab.transform.GetComponent<Tile>());
-                // 비활성화 상태로 대기
-                tile.gameObject.SetActive(false);
-                tile.name = prefab.name;
-
-                // 좌표 설정
-                tile.SetX(x);
-                tile.SetY(y);
-
-                // 부모 설정
-                tile.transform.SetParent(this.transform);
-                // 위치 설정
-                tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x) / 2, y + (y * tile.transform.localScale.y) / 2);
-
-                TileArray[x, y] = tile;
-            }
-        }
-    }
-
+    /// <param name="x">Coordination X</param>
+    /// <param name="y">Coordination Y</param>
+    /// <returns>Tile about (X, Y)</returns>
     public static Tile GetTile(int x, int y) { return TileArray[x, y]; }
 
     public static void SwapIdx(Tile moved, Tile to)
@@ -123,8 +69,79 @@ public class Board : MonoBehaviour
         to.SetY(tmpY);
     }
 
-    public static void ReplaceTiles()
+    /*
+     * =================================================== private ===================================================
+     */
+    /// <summary>
+    /// Init GameObjects(Tiles)
+    /// </summary>
+    private void CreateTiles()
     {
+        // Init list for store about tiles
+        TileArray = new Tile[Width, Height * 2];
+
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
+                Tile tile = Instantiate<Tile>(prefab.transform.GetComponent<Tile>());
+
+                tile.name = prefab.name;
+
+                // Set Coordination
+                tile.SetX(x);
+                tile.SetY(y);
+
+                // Set parent about transform
+                tile.transform.SetParent(this.transform);
+                // Set position
+                tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x) / 2, y + (y * tile.transform.localScale.y) / 2);
+
+                TileArray[x, y] = tile;
+            }
+        }
+
+        ArrangeReplaceTiles();
+    }
+
+    /// <summary>
+    /// Init ArrangedTiles
+    /// </summary>
+    private void ArrangeReplaceTiles()
+    {
+        // Arranged Tiles Create (Active = false)
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = Height; y < Height * 2; y++)
+            {
+                GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
+                Tile tile = Instantiate<Tile>(prefab.transform.GetComponent<Tile>());
+
+                // Set Deactivate
+                tile.gameObject.SetActive(false);
+                tile.name = prefab.name;
+
+                // Set Coordination
+                tile.SetX(x);
+                tile.SetY(y);
+
+                // Set parent about transform
+                tile.transform.SetParent(this.transform);
+                // Set position
+                tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x) / 2, y + (y * tile.transform.localScale.y) / 2);
+
+                TileArray[x, y] = tile;
+            }
+        }
+    }
+
+    /// <summary>
+    /// MoveDown arranged Tiles
+    /// </summary>
+    private void ReplaceTiles()
+    {
+        int axisX = 0;
         int startMoveDownIdxY = 0;
         for (int x = 0; x < Width; x++)
         {
@@ -140,8 +157,9 @@ public class Board : MonoBehaviour
 
             if (moveDownCnt != 0)
             {
+                axisX = x;
                 for (int idx = startMoveDownIdxY + 1; idx < Height + moveDownCnt; idx++)
-                { 
+                {
                     TileArray[x, idx].MoveDown(moveDownCnt);
                     TileArray[x, idx - moveDownCnt] = TileArray[x, idx];
                     TileArray[x, idx - moveDownCnt].SetX(x);
@@ -149,5 +167,23 @@ public class Board : MonoBehaviour
                 }
             }
         }
+
+        MatchList.Clear();
+        ArrangeReplaceTiles();
+        //EvoluteMatchUp(axisX);
+    }
+
+    private IEnumerator EvoluteMatchUp(int axisX)
+    {
+        bool retryFlag = false;
+        for (int y = 0; y < Height; y++) if (TileArray[axisX, y].MatchAfterMovedown()) retryFlag = true;
+
+        if (retryFlag)
+        {
+            if (MOVEDOWN == false) MOVEDOWN = true;
+            else yield return null;
+        }
+
+        yield break;
     }
 }
