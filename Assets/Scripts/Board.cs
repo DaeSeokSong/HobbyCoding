@@ -11,6 +11,8 @@ public class Board : MonoBehaviour
     public static List<Tile> MatchList = new List<Tile>();
     // IsMoveDown?
     public static bool MOVEDOWN = false;
+    // IsAfterMatchUp?
+    public static bool AFTERMATCHUP = false;
     // Width, Height
     public static int Width = 8;
     public static int Height = 8;
@@ -24,10 +26,15 @@ public class Board : MonoBehaviour
     private GameObject m_TileOrange;
     private GameObject m_TileYellow;
     private GameObject[] m_TileTypes;
+    // Controller
+    private BoardController m_BoardController;
 
     // Start is called before the first frame update
     void Start()
     {
+        // Init Controller
+        m_BoardController = new BoardController(this.transform);
+
         // Init Prefab
         m_TileRed = Resources.Load("Prefabs/CandyRed") as GameObject;
         m_TileBlue = Resources.Load("Prefabs/CandyBlue") as GameObject;
@@ -42,7 +49,7 @@ public class Board : MonoBehaviour
 
     void Update()
     {
-        if (MOVEDOWN) ReplaceTiles();
+        if (MOVEDOWN || AFTERMATCHUP) ReplaceTiles();
     }
 
     /*
@@ -96,7 +103,7 @@ public class Board : MonoBehaviour
                 // Set parent about transform
                 tile.transform.SetParent(this.transform);
                 // Set position
-                tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x) / 2, y + (y * tile.transform.localScale.y) / 2);
+                tile.transform.position = new Vector3((121 + x) + (x * tile.transform.localScale.x) / 2, (y + (y * tile.transform.localScale.y) / 2) + 474, 200);
 
                 TileArray[x, y] = tile;
             }
@@ -129,7 +136,7 @@ public class Board : MonoBehaviour
                 // Set parent about transform
                 tile.transform.SetParent(this.transform);
                 // Set position
-                tile.transform.position = new Vector2(x + (x * tile.transform.localScale.x) / 2, y + (y * tile.transform.localScale.y) / 2);
+                tile.transform.position = new Vector3((121 + x) + (x * tile.transform.localScale.x) / 2, (y + (y * tile.transform.localScale.y) / 2) + 474, 200);
 
                 TileArray[x, y] = tile;
             }
@@ -170,20 +177,6 @@ public class Board : MonoBehaviour
 
         MatchList.Clear();
         ArrangeReplaceTiles();
-        //EvoluteMatchUp(axisX);
-    }
-
-    private IEnumerator EvoluteMatchUp(int axisX)
-    {
-        bool retryFlag = false;
-        for (int y = 0; y < Height; y++) if (TileArray[axisX, y].MatchAfterMovedown()) retryFlag = true;
-
-        if (retryFlag)
-        {
-            if (MOVEDOWN == false) MOVEDOWN = true;
-            else yield return null;
-        }
-
-        yield break;
+        m_BoardController.StartCoroutine(m_BoardController.EvoluteMatchUp(axisX));
     }
 }

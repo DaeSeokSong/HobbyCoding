@@ -296,7 +296,7 @@ public class Tile : MonoBehaviour
         this.gameObject.SetActive(true);
 
         // Compute DownTo Vector2
-        Vector2 downTo = new Vector2(this.transform.position.x, this.transform.position.y - (downScale * TileStatus.DIAMETER));
+        Vector3 downTo = new Vector3(this.transform.position.x, this.transform.position.y - (downScale * TileStatus.DIAMETER), this.transform.position.z);
 
         // Move Down
         if (m_TileBehaivour == null) m_TileBehaivour = new TileBehaivour(this.transform);

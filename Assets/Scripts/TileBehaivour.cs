@@ -38,22 +38,22 @@ public class TileBehaivour : MonoBehaviour
     /// <param name="moved">Moved tile</param>
     /// <param name="to">Target tile's Vector(2D) to move</param>
     /// <returns>Coroutine</returns>
-    public IEnumerator CoStartMove(Tile moved, Vector2 to)
+    public IEnumerator CoStartMove(Tile moved, Vector3 to)
     {
         if (m_IsRunningMove > 2) yield return null;
         m_IsRunningMove++;
 
-        Vector2 startPos = moved.transform.position;
+        Vector3 startPos = moved.transform.position;
 
         float elapsed = 0.0f;
         while (elapsed < TileStatus.DURATION)
         {
             elapsed += Time.smoothDeltaTime;
-            moved.transform.position = Vector2.Lerp(startPos, to, elapsed / TileStatus.DURATION);
+            moved.transform.localPosition = Vector3.Lerp(startPos, to, elapsed / TileStatus.DURATION);
 
             yield return null;
         }
-        moved.transform.position = to;
+        moved.transform.localPosition = to;
 
         m_IsRunningMove--;
 
@@ -88,19 +88,19 @@ public class TileBehaivour : MonoBehaviour
     /// <param name="moved">Moved tile</param>
     /// <param name="to">Target tile to move</param>
     /// <returns>Coroutine</returns>
-    public IEnumerator CoStartMoveDown(Tile moved, Vector2 to)
+    public IEnumerator CoStartMoveDown(Tile moved, Vector3 to)
     {
         // Delay about Movedown for moving and destroying time
         yield return new WaitForSeconds(TileStatus.DURATION);
         m_IsRunningMoveDown++;
 
-        Vector2 startPos = moved.transform.position;
+        Vector3 startPos = moved.transform.position;
 
         float elapsed = 0.0f;
         while (elapsed < TileStatus.DURATION)
         {
             elapsed += Time.smoothDeltaTime;
-            moved.transform.position = Vector2.Lerp(startPos, to, elapsed / TileStatus.DURATION);
+            moved.transform.position = Vector3.Lerp(startPos, to, elapsed / TileStatus.DURATION);
 
             yield return null;
         }
