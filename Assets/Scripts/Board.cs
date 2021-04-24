@@ -103,7 +103,8 @@ public class Board : MonoBehaviour
                 // Set parent about transform
                 tile.transform.SetParent(this.transform);
                 // Set position
-                tile.transform.position = new Vector3((121 + x) + (x * tile.transform.localScale.x) / 2, (y + (y * tile.transform.localScale.y) / 2) + 474, 200);
+                tile.transform.localScale = new Vector3(60, 60, 0);
+                tile.transform.localPosition = new Vector3(-320 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2))), -730 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2))), 200);
 
                 TileArray[x, y] = tile;
             }
@@ -136,7 +137,8 @@ public class Board : MonoBehaviour
                 // Set parent about transform
                 tile.transform.SetParent(this.transform);
                 // Set position
-                tile.transform.position = new Vector3((121 + x) + (x * tile.transform.localScale.x) / 2, (y + (y * tile.transform.localScale.y) / 2) + 474, 200);
+                tile.transform.localScale = new Vector3(60, 60, 0);
+                tile.transform.localPosition = new Vector3(-320 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2))), -730 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2))), 200);
 
                 TileArray[x, y] = tile;
             }

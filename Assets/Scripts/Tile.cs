@@ -115,8 +115,8 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void SwapPosition()
     {
-        m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMove(this, m_TargetTile.transform.position));
-        m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMove(m_TargetTile, this.transform.position));
+        m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMove(this, m_TargetTile.transform.localPosition));
+        m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMove(m_TargetTile, this.transform.localPosition));
 
         Board.SwapIdx(this, m_TargetTile);
     }
@@ -296,7 +296,7 @@ public class Tile : MonoBehaviour
         this.gameObject.SetActive(true);
 
         // Compute DownTo Vector2
-        Vector3 downTo = new Vector3(this.transform.position.x, this.transform.position.y - (downScale * TileStatus.DIAMETER), this.transform.position.z);
+        Vector3 downTo = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y - (downScale * TileStatus.DIAMETER), this.transform.position.z);
 
         // Move Down
         if (m_TileBehaivour == null) m_TileBehaivour = new TileBehaivour(this.transform);

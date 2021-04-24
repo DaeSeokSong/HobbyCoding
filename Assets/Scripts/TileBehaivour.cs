@@ -43,7 +43,7 @@ public class TileBehaivour : MonoBehaviour
         if (m_IsRunningMove > 2) yield return null;
         m_IsRunningMove++;
 
-        Vector3 startPos = moved.transform.position;
+        Vector3 startPos = moved.transform.localPosition;
 
         float elapsed = 0.0f;
         while (elapsed < TileStatus.DURATION)
@@ -94,17 +94,17 @@ public class TileBehaivour : MonoBehaviour
         yield return new WaitForSeconds(TileStatus.DURATION);
         m_IsRunningMoveDown++;
 
-        Vector3 startPos = moved.transform.position;
+        Vector3 startPos = moved.transform.localPosition;
 
         float elapsed = 0.0f;
         while (elapsed < TileStatus.DURATION)
         {
             elapsed += Time.smoothDeltaTime;
-            moved.transform.position = Vector3.Lerp(startPos, to, elapsed / TileStatus.DURATION);
+            moved.transform.localPosition = Vector3.Lerp(startPos, to, elapsed / TileStatus.DURATION);
 
             yield return null;
         }
-        moved.transform.position = to;
+        moved.transform.localPosition = to;
 
         m_IsRunningMoveDown--;
         if (m_IsRunningMoveDown == 0) Board.MOVEDOWN = false;
