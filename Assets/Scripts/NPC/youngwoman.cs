@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class woman : MonoBehaviour
+public class youngwoman : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -15,11 +15,10 @@ public class woman : MonoBehaviour
     {
         
     }
-
     IEnumerator FoodWait()
     {
-        Sprite[] sprites = Resources.LoadAll<Sprite>("Image/Customer/madam");
-        for (int i = 0; i < 3; i++)
+        Sprite[] sprites = Resources.LoadAll<Sprite>("Image/Customer/woman 1");
+        for(int i = 0; i < 3; i++)
         {
             gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = sprites[i];
             yield return new WaitForSeconds(5f);

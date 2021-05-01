@@ -9,47 +9,42 @@ public class Board : MonoBehaviour
     public static Tile[,] TileArray;
     // MatchUp List
     public static List<Tile> MatchList = new List<Tile>();
-    // IsMoveDown?
+    // isMoveDown ?
     public static bool MOVEDOWN = false;
-    // IsAfterMatchUp?
-    public static bool AFTERMATCHUP = false;
     // Width, Height
     public static int Width = 8;
     public static int Height = 8;
 
     // Private
     // Prefabs
-    private GameObject m_TileRed;
-    private GameObject m_TileBlue;
-    private GameObject m_TileGreen;
-    private GameObject m_TilePurple;
-    private GameObject m_TileOrange;
-    private GameObject m_TileYellow;
+    private GameObject m_Tile1;
+    private GameObject m_Tile2;
+    private GameObject m_Tile3;
+    private GameObject m_Tile4;
+    private GameObject m_Tile5;
     private GameObject[] m_TileTypes;
-    // Controller
-    private BoardController m_BoardController;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Init Controller
-        m_BoardController = new BoardController(this.transform);
-
         // Init Prefab
-        m_TileRed = Resources.Load("Prefabs/CandyRed") as GameObject;
-        m_TileBlue = Resources.Load("Prefabs/CandyBlue") as GameObject;
-        m_TileGreen = Resources.Load("Prefabs/CandyGreen") as GameObject;
-        m_TilePurple = Resources.Load("Prefabs/CandyPurple") as GameObject;
-        m_TileOrange = Resources.Load("Prefabs/CandyOrange") as GameObject;
-        m_TileYellow = Resources.Load("Prefabs/CandyYellow") as GameObject;
-        m_TileTypes = new GameObject[] { m_TileRed, m_TileBlue, m_TileGreen, m_TilePurple, m_TileOrange, m_TileYellow };
+        m_Tile1 = Resources.Load("Prefabs/Tile1") as GameObject;
+        m_Tile2 = Resources.Load("Prefabs/Tile2") as GameObject;
+        m_Tile3 = Resources.Load("Prefabs/Tile3") as GameObject;
+        m_Tile4 = Resources.Load("Prefabs/Tile4") as GameObject;
+        m_Tile5 = Resources.Load("Prefabs/Tile5") as GameObject;
+        m_TileTypes = new GameObject[] { m_Tile1, m_Tile2, m_Tile3, m_Tile4, m_Tile5 };
 
         CreateTiles();
     }
 
     void Update()
     {
-        if (MOVEDOWN || AFTERMATCHUP) ReplaceTiles();
+        if (MOVEDOWN)
+        {
+            ArrangeReplaceTiles();
+            MOVEDOWN = false;
+        }
     }
 
     /*
@@ -143,42 +138,5 @@ public class Board : MonoBehaviour
                 TileArray[x, y] = tile;
             }
         }
-    }
-
-    /// <summary>
-    /// MoveDown arranged Tiles
-    /// </summary>
-    private void ReplaceTiles()
-    {
-        int axisX = 0;
-        int startMoveDownIdxY = 0;
-        for (int x = 0; x < Width; x++)
-        {
-            int moveDownCnt = 0;
-            for (int y = 0; y < Height; y++)
-            {
-                if (TileArray[x, y].DESTROY)
-                {
-                    moveDownCnt++;
-                    startMoveDownIdxY = y;
-                }
-            }
-
-            if (moveDownCnt != 0)
-            {
-                axisX = x;
-                for (int idx = startMoveDownIdxY + 1; idx < Height + moveDownCnt; idx++)
-                {
-                    TileArray[x, idx].MoveDown(moveDownCnt);
-                    TileArray[x, idx - moveDownCnt] = TileArray[x, idx];
-                    TileArray[x, idx - moveDownCnt].SetX(x);
-                    TileArray[x, idx - moveDownCnt].SetY(idx - moveDownCnt);
-                }
-            }
-        }
-
-        MatchList.Clear();
-        ArrangeReplaceTiles();
-        m_BoardController.StartCoroutine(m_BoardController.EvoluteMatchUp(axisX));
     }
 }

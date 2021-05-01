@@ -6,11 +6,13 @@ using UnityEngine.UI;
 public class OrderManager : MonoBehaviour
 {
     public List<int> order;
+    public List<int> createFood;
 
     // Start is called before the first frame update
     void Start()
     {
         order = new List<int>();
+        createFood = new List<int>();
     }
 
     // Update is called once per frame
@@ -32,6 +34,37 @@ public class OrderManager : MonoBehaviour
     public void DOrder(int orderNumber)
     {
         this.order.Remove(orderNumber);
+    }
+    public void CookFood(int orderNumber)
+    {
+        this.createFood.Add(orderNumber);
+    }
+    public bool SeveFood(int orderNumber)
+    {
+        bool successed = false;
+
+        foreach (int i in order)
+        {
+            if (i == orderNumber)
+            {
+                successed = true;
+                break;
+            }
+        }
+        if (successed)
+        {
+            foreach (int i in createFood)
+            {
+                if (i == orderNumber)
+                {
+                    this.createFood.Remove(orderNumber);
+                    this.order.Remove(orderNumber);
+                    return successed;
+                }
+            }
+        }
+
+        return false;
     }
 
 }

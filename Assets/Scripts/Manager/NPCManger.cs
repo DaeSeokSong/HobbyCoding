@@ -18,17 +18,22 @@ public class NPCManger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) Customercreate();//테스트용 NPC생성
+        //if (Input.GetKeyDown(KeyCode.Space)) Customercreate();//테스트용 NPC생성
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            GameObject.Find("Canvas").transform.GetChild(0).gameObject.SetActive(true);
+            GameObject.Find("Canvas").transform.GetChild(0).GetComponent<TalkBox>().Talk(1);
+        }
     }
 
     public void Customercreate()
     {
         int i = 0;
-        int chaType = Random.Range(0, 2);
+        int chaType = Random.Range(0, 3);
         int orderNumber = Random.Range(0, 3);
         Object resource;
 
-        Vector3 position = new Vector3(0, 0, 0);
+        Vector3 position = new Vector3(0, 0, 1);
         GameObject parent;
         GameObject createNPC;
         OrderManager orderMG = GameObject.Find("OrderManager").GetComponent<OrderManager>();
@@ -42,6 +47,9 @@ public class NPCManger : MonoBehaviour
             case 1:
                 resource = Resources.Load("Prefabs/NPC/YoungWoman");
                 break;
+            case 2:
+                resource = Resources.Load("Prefabs/NPC/Woman");
+                break;
             default:
                 resource = Resources.Load("Prefabs/NPC/YoungMan");
                 break;
@@ -53,7 +61,7 @@ public class NPCManger : MonoBehaviour
             if (!npcPosition[i])
             {
                 npcPosition[i] = true;
-                position = new Vector3(-1.5f + ((float)i * 1.5f), 0, 0);
+                position = new Vector3(-1.5f + ((float)i * 1.5f), 0, 1);
                 break;
             }
         }
@@ -94,13 +102,11 @@ public class NPCManger : MonoBehaviour
     {
         while (true)
         {
-            
             yield return new WaitForSeconds(5f);
-            if (Random.Range(0, 10) < 9)//손님 들어올 확률
+            if (GameObject.Find("NPC").transform.childCount < 3)//손님 들어올 확률
             {
-                if (GameObject.Find("NPC").transform.childCount < 3)
+                if (Random.Range(0, 10) < 9)
                 {
-                    Debug.Log("손님 생성");
                     Customercreate();
                 }
             }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class TileStatus : MonoBehaviour
 {
     // Scale
-    public const float DIAMETER = 1.5f;
+    public const float DIAMETER = 90f;
 
     // Move
     // Move Direction
@@ -15,8 +15,9 @@ public class TileStatus : MonoBehaviour
     public const int DOWN = 4;
     // Moving Time
     public const float DURATION = 0.3f;
+    public const float DESTROY_DURATION = DURATION * 3f;
 
     // Destroy
-    public const float DESTROY_SCALE = 0.3f;
-    public const float DESTROY_SPEED = 1.5f;
+    public const float DESTROY_SCALE = 30f;
+    public const float DESTROY_SPEED = 60f;
 }
