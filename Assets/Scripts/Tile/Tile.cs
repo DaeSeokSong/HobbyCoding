@@ -233,8 +233,7 @@ public class Tile : MonoBehaviour
         }
 
         Board.MOVEDOWN = true;
-
-        m_TileBehaivour.StartCoroutine(ContinueMatchUp(matchX));
+        //m_TileBehaivour.StartCoroutine(ContinueMatchUp(matchX));
     }
 
     /// <summary>
@@ -260,6 +259,48 @@ public class Tile : MonoBehaviour
     private IEnumerator CoDoDestroy()
     {
         return m_TileBehaivour.CoStartDestroy(this);
+    }
+
+    /// <summary>
+    /// Continue matchup after first matchup
+    /// </summary>
+    /// <param name="moveDownX">moveDown axis X and DownScale</param>
+    /// <returns>coroutine</returns>
+    [System.Obsolete]
+    private IEnumerator ContinueMatchUp(Dictionary<int, Dictionary<string, int>> moveDownX)
+    {
+        // Delay about Movedown for moving and destroying time
+        yield return new WaitForSeconds(TileStatus.DESTROY_DURATION);
+
+        foreach (int x in moveDownX.Keys)
+        {
+            for (int y = moveDownX[x]["start"] - moveDownX[x]["scale"]; y < Board.Height; y++)
+            {
+                Board.TileArray[x, y].MatchUpX();
+                Board.TileArray[x, y].MatchUpY();
+
+                // MatchUp put in movedTile
+                if (Board.MatchList.Count != 0)
+                {
+                    Board.MatchList.Add(this);
+                }
+            }
+        }
+
+        if (Board.MatchList.Count != 0)
+        {
+            // MatchUped Tile is exist?
+            if (UpdateMatchStateOfTiles())
+            {
+                // MatchUped Tile set up for Destroy
+                SetUpDestroy();
+                SetMoveDownTiles();
+            }
+        }
+        else
+        {
+            yield break;
+        }
     }
 
     /*
@@ -342,54 +383,14 @@ public class Tile : MonoBehaviour
     [System.Obsolete]
     public void MoveDown(int downScale)
     {
-        // Activate this Tile
-        this.gameObject.SetActive(true);
+        // Set Active
+        if (this.gameObject.active == false) this.gameObject.SetActive(true);
+
         // Compute DownTo Vector3
-        Vector3 downTo = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y - (downScale * TileStatus.DIAMETER), 200);
+        Vector3 downTo = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y - (downScale * TileStatus.DIAMETER), 100);
 
         // Move Down
         if (m_TileBehaivour == null) m_TileBehaivour = new TileBehaivour(this.transform);
         m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMoveDown(this, downTo));
-    }
-
-    public IEnumerator ContinueMatchUp(Dictionary<int, Dictionary<string, int>> moveDownX)
-    {
-        Board.MatchList.Clear();
-        // Delay about Movedown for moving and destroying time
-        yield return new WaitForSeconds(TileStatus.DESTROY_DURATION);
-
-        foreach (int x in moveDownX.Keys)
-        {
-            for (int y = moveDownX[x]["start"] - moveDownX[x]["scale"]; y < Board.Height; y++)
-            {
-                Debug.Log(Board.TileArray[x, y].name);
-                Board.TileArray[x, y].MatchUpX();
-                Board.TileArray[x, y].MatchUpY();
-
-                // MatchUp put in movedTile
-                if (Board.MatchList.Count != 0)
-                {
-                    Board.MatchList.Add(this);
-                }
-            }
-        }
-
-        if (Board.MatchList.Count != 0)
-        {
-            // MatchUped Tile is exist?
-            if (UpdateMatchStateOfTiles())
-            {
-                // MatchUped Tile set up for Destroy
-                SetUpDestroy();
-                SetMoveDownTiles();
-            }
-            ContinueMatchUp(moveDownX);
-        }
-        else
-        {
-            yield break;
-        }
-
-        
     }
 }

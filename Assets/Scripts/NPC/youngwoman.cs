@@ -10,20 +10,33 @@ public class youngwoman : MonoBehaviour
         StartCoroutine("FoodWait");
     }
 
+    void Create()
+    {
+    }
     // Update is called once per frame
     void Update()
     {
-        
+        transform.position = Vector3.MoveTowards(transform.position, GameObject.Find("Position").transform.GetChild(gameObject.GetComponent<customerdefault>().position).transform.position, 1f * Time.deltaTime);
     }
+
     IEnumerator FoodWait()
     {
         Sprite[] sprites = Resources.LoadAll<Sprite>("Image/Customer/woman 1");
-        for(int i = 0; i < 3; i++)
+
+        while (true)
         {
-            gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = sprites[i];
-            yield return new WaitForSeconds(5f);
+            yield return null;
+            if ((transform.position == GameObject.Find("Position").transform.GetChild(gameObject.GetComponent<customerdefault>().position).transform.position))
+            {
+                gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                for (int i = 0; i < 3; i++)
+                {
+                    gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = sprites[i];
+                    yield return new WaitForSeconds(8f);
+                }
+                gameObject.GetComponent<customerdefault>().SelfRemove(false);
+                Destroy(gameObject);
+            }
         }
-        gameObject.GetComponent<customerdefault>().SelfRemove(false);
-        Destroy(gameObject);
     }
 }

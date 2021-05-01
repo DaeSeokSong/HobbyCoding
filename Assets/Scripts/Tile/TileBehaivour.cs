@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class TileBehaivour : MonoBehaviour
 {
-    // Public
-    // IsRunning
-    public static int m_IsRunningMove = 0;
-
     // Private
     // MonoBehaviour
     private MonoBehaviour m_MonoBehaviour;
@@ -36,9 +32,6 @@ public class TileBehaivour : MonoBehaviour
     /// <returns>Coroutine</returns>
     public IEnumerator CoStartMove(Tile moved, Vector3 to)
     {
-        if (m_IsRunningMove > 1) yield return null;
-        m_IsRunningMove++;
-
         Vector3 startPos = moved.transform.localPosition;
 
         float elapsed = 0.0f;
@@ -49,12 +42,9 @@ public class TileBehaivour : MonoBehaviour
 
             yield return null;
         }
-        moved.transform.localPosition = new Vector3(Mathf.Round(to.x / 10) * 10, Mathf.Round(to.y / 10) * 10, Mathf.Round(to.z));
-
-        m_IsRunningMove--;
-
+        moved.transform.localPosition = new Vector3(Mathf.Round(to.x / 10) * 10, Mathf.Round(to.y / 10) * 10, to.z);
+        
         yield break;
-
     }
 
     /// <summary>
@@ -70,7 +60,6 @@ public class TileBehaivour : MonoBehaviour
         yield return new WaitForSeconds(TileStatus.DESTROY_DURATION);
 
         Vector3 startPos = moved.transform.localPosition;
-        if (moved.gameObject.active == false) moved.gameObject.SetActive(true);
 
         float elapsed = 0.0f;
         while (elapsed < TileStatus.DURATION)
@@ -80,7 +69,7 @@ public class TileBehaivour : MonoBehaviour
 
             yield return null;
         }
-        moved.transform.localPosition = to;
+        moved.transform.localPosition = new Vector3(Mathf.Round(to.x / 10) * 10, Mathf.Round(to.y / 10) * 10, to.z);
         Board.MatchList.Remove(moved);
 
         yield break;

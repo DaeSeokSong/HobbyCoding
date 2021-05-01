@@ -9,25 +9,29 @@ public class Board : MonoBehaviour
     public static Tile[,] TileArray;
     // MatchUp List
     public static List<Tile> MatchList = new List<Tile>();
-    // isMoveDown ?
+    // IsMoveDown?
     public static bool MOVEDOWN = false;
+    // IsAfterMatchUp?
+    public static bool AFTERMATCHUP = false;
     // Width, Height
     public static int Width = 8;
     public static int Height = 8;
 
     // Private
-    // Prefabs
+    // Tiles
     private GameObject m_Tile1;
     private GameObject m_Tile2;
     private GameObject m_Tile3;
     private GameObject m_Tile4;
     private GameObject m_Tile5;
     private GameObject[] m_TileTypes;
+    // Tile's background
+    private GameObject m_TileBackground;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Init Prefab
+        // Init Tiles
         m_Tile1 = Resources.Load("Prefabs/Tile1") as GameObject;
         m_Tile2 = Resources.Load("Prefabs/Tile2") as GameObject;
         m_Tile3 = Resources.Load("Prefabs/Tile3") as GameObject;
@@ -35,7 +39,11 @@ public class Board : MonoBehaviour
         m_Tile5 = Resources.Load("Prefabs/Tile5") as GameObject;
         m_TileTypes = new GameObject[] { m_Tile1, m_Tile2, m_Tile3, m_Tile4, m_Tile5 };
 
+        // Init Tile's background
+        m_TileBackground = Resources.Load("Prefabs/Ingredient") as GameObject;
+
         CreateTiles();
+        
     }
 
     void Update()
@@ -86,10 +94,14 @@ public class Board : MonoBehaviour
         {
             for (int y = 0; y < Height; y++)
             {
+                // Tile
                 GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
                 Tile tile = Instantiate<Tile>(prefab.transform.GetComponent<Tile>());
-
                 tile.name = prefab.name;
+
+                // Background
+                GameObject background = Instantiate<GameObject>(m_TileBackground.transform.gameObject);
+                background.name = "Background";
 
                 // Set Coordination
                 tile.SetX(x);
@@ -97,9 +109,18 @@ public class Board : MonoBehaviour
 
                 // Set parent about transform
                 tile.transform.SetParent(this.transform);
-                // Set position
+                background.transform.SetParent(this.transform);
+
+                // Set Position
+                // Set Scale
                 tile.transform.localScale = new Vector3(60, 60, 0);
-                tile.transform.localPosition = new Vector3(-320 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2))), -730 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2))), 200);
+                background.transform.localScale = new Vector3(100, 100, 0);
+                // Compute Position
+                float initX = -310 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2)));
+                float initY = -730 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2)));
+                // Set Position
+                tile.transform.localPosition = new Vector3(initX, initY, 100);
+                background.transform.localPosition = new Vector3(initX, initY, 200);
 
                 TileArray[x, y] = tile;
             }
@@ -133,10 +154,29 @@ public class Board : MonoBehaviour
                 tile.transform.SetParent(this.transform);
                 // Set position
                 tile.transform.localScale = new Vector3(60, 60, 0);
-                tile.transform.localPosition = new Vector3(-320 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2))), -730 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2))), 200);
+                // Compute Position
+                float initX = -310 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2)));
+                float initY = -730 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2)));
+                tile.transform.localPosition = new Vector3(initX, initY, 100);
 
                 TileArray[x, y] = tile;
             }
         }
+    }
+
+    private bool OverlapTile(int x, int y, int a)
+    {
+        int count = 0;
+        GameObject Base = GameObject.Find("Base").transform.GetChild(3).gameObject;
+        string name = Base.transform.GetChild(8 - y + (8 * x) - 1 + a).name;
+        //x는 0부터 계산 y는 0부터 계산
+
+        if (y > 0 && name == Base.transform.GetChild(8 - y + 1 + (8 * x) - 1 + a).name) count++;//위
+        if (y < 7 && name == Base.transform.GetChild(8 - y - 1 + (8 * x) - 1 + a).name) count++;//아래
+        if (x < 7 && name == Base.transform.GetChild(8 - y + (8 * (x + 1)) - 1 + a).name) count++;//오른쪽
+        if (x > 0 && name == Base.transform.GetChild(8 - y + (8 * (x - 1)) - 1 + a).name) count++;//왼쪽
+        
+        if (count > 2) return true;
+        else return false;
     }
 }

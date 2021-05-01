@@ -21,8 +21,7 @@ public class NPCManger : MonoBehaviour
         //if (Input.GetKeyDown(KeyCode.Space)) Customercreate();//테스트용 NPC생성
         if (Input.GetKeyDown(KeyCode.P))
         {
-            GameObject.Find("Canvas").transform.GetChild(0).gameObject.SetActive(true);
-            GameObject.Find("Canvas").transform.GetChild(0).GetComponent<TalkBox>().Talk(1);
+            GameObject.Find("Canvas").transform.GetChild(0).GetComponent<TalkBox>().talkBoxOn(1);
         }
     }
 
@@ -31,6 +30,7 @@ public class NPCManger : MonoBehaviour
         int i = 0;
         int chaType = Random.Range(0, 3);
         int orderNumber = Random.Range(0, 3);
+        orderNumber = 0;
         Object resource;
 
         Vector3 position = new Vector3(0, 0, 1);
@@ -55,13 +55,13 @@ public class NPCManger : MonoBehaviour
                 break;
         }
 
-        
+      
         for(i = 0; i < npcPosition.Length; i++)
         {
             if (!npcPosition[i])
             {
                 npcPosition[i] = true;
-                position = new Vector3(-1.5f + ((float)i * 1.5f), 0, 1);
+                position = new Vector3(-6f, 1.2f, 1);
                 break;
             }
         }
@@ -73,18 +73,18 @@ public class NPCManger : MonoBehaviour
         createNPC = Instantiate(resource, position, Quaternion.identity, parent.transform) as GameObject;
         createNPC.GetComponent<customerdefault>().Customerinit(orderNumber, i, chaType);
 
-
+        //createNPC.GetComponent<>
 
         switch (orderNumber)
         {
             case 0:
-                createNPC.transform.GetChild(0).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Image/ball1");
+                createNPC.transform.GetChild(0).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Image/Food/Menu1");
                 break;
             case 1:
-                createNPC.transform.GetChild(0).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Image/banana");
+                createNPC.transform.GetChild(0).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Image/Food/Menu1");
                 break;
             case 2:
-                createNPC.transform.GetChild(0).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Image/box");
+                createNPC.transform.GetChild(0).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Image/Food/Menu1");
                 break;
             default:
                 Debug.Log("캐릭터 생성 후 주문 에러");

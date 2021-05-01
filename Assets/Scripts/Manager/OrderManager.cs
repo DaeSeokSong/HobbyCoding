@@ -8,6 +8,9 @@ public class OrderManager : MonoBehaviour
     public List<int> order;
     public List<int> createFood;
 
+    public int favor = 0;
+    public int complain = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +24,7 @@ public class OrderManager : MonoBehaviour
 
     }
 
-    private string OutList()
+    private string OutList()//Áö¿ì±â
     {
         string OrderList = null;
 
@@ -33,6 +36,7 @@ public class OrderManager : MonoBehaviour
     }
     public void DOrder(int orderNumber)
     {
+        if(this.complain < 100) this.complain += 1;
         this.order.Remove(orderNumber);
     }
     public void CookFood(int orderNumber)
@@ -59,6 +63,7 @@ public class OrderManager : MonoBehaviour
                 {
                     this.createFood.Remove(orderNumber);
                     this.order.Remove(orderNumber);
+                    if(this.favor < 10) this.favor += 1;
                     return successed;
                 }
             }
