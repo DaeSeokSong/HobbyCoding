@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Change_Adv : MonoBehaviour
+public class ChangeScene : MonoBehaviour
 {
-    void Update()
+    public void SceneChange_Adv()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            SceneManager.LoadScene("Advertise");
-        }
+        SceneManager.LoadScene("Advertise");
+    }
+
+    public void SceneChange_Pl()
+    {
+        SceneManager.LoadScene("Police_Line");
     }
 }

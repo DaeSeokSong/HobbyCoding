@@ -28,6 +28,11 @@ public class TalkBox : MonoBehaviour
         if(state) StartCoroutine("Talk");
     }
 
+    void Awake()
+    {
+
+    }
+
     public void initTalk()//대화 관련한 Dictionary init
     {
         talkData.Add(1, new string[] { "누구 허락받고 여기서 장사하는거지?", "장사를 할려면 자릿세를 내야지", "돈이 없다고?", "빌려줄게", "망간에 다시 찾아오지" });
@@ -43,8 +48,9 @@ public class TalkBox : MonoBehaviour
             foreach (string i in talk)
             {
                 yield return ReadLine(i);
-                while (!Input.GetKey(KeyCode.Space)) yield return null;
+                while (Input.touchCount > 0 || !Input.GetKey(KeyCode.Space)) yield return null;
             }
+            GameObject.Find("NPC").GetComponent<NPCManger>().stop = false;
             state = false;
             gameObject.SetActive(false);
             
@@ -66,6 +72,7 @@ public class TalkBox : MonoBehaviour
     public void talkBoxOn(int gid)
     {
         this.id = gid;
+        GameObject.Find("NPC").GetComponent<NPCManger>().stop = true;
         state = true;
         gameObject.SetActive(true);
     }

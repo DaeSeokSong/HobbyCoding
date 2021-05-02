@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -130,6 +131,8 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void SwapPosition()
     {
+        Debug.Log("m_TargetTile = " + m_TargetTile.name);
+        Debug.Log("this = " + this.name);
         m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMove(this, m_TargetTile.transform.localPosition));
         m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMove(m_TargetTile, this.transform.localPosition));
 
@@ -233,7 +236,7 @@ public class Tile : MonoBehaviour
         }
 
         Board.MOVEDOWN = true;
-        //m_TileBehaivour.StartCoroutine(ContinueMatchUp(matchX));
+        // m_TileBehaivour.StartCoroutine(ContinueMatchUp(matchX));
     }
 
     /// <summary>
@@ -387,6 +390,7 @@ public class Tile : MonoBehaviour
         if (this.gameObject.active == false) this.gameObject.SetActive(true);
 
         // Compute DownTo Vector3
+        Debug.Log("downScale = " + downScale);
         Vector3 downTo = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y - (downScale * TileStatus.DIAMETER), 100);
 
         // Move Down

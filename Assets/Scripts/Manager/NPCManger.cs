@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class NPCManger : MonoBehaviour
 {
     public bool[] npcPosition = new bool[] { false, false, false };
-
+    public bool stop = false;
 
     // Start is called before the first frame update
     void Start()
@@ -18,11 +18,6 @@ public class NPCManger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Space)) Customercreate();//테스트용 NPC생성
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            GameObject.Find("Canvas").transform.GetChild(0).GetComponent<TalkBox>().talkBoxOn(1);
-        }
     }
 
     public void Customercreate()
@@ -61,7 +56,7 @@ public class NPCManger : MonoBehaviour
             if (!npcPosition[i])
             {
                 npcPosition[i] = true;
-                position = new Vector3(-6f, 1.2f, 1);
+                position = new Vector3(-6f, 2f, 1);
                 break;
             }
         }
@@ -95,19 +90,21 @@ public class NPCManger : MonoBehaviour
         orderMG.Order(orderNumber, i);
     }
 
-
-
     
     IEnumerator CreateCool()
     {
         while (true)
         {
+            
             yield return new WaitForSeconds(5f);
-            if (GameObject.Find("NPC").transform.childCount < 3)//손님 들어올 확률
+            if (!stop)
             {
-                if (Random.Range(0, 10) < 9)
+                if (GameObject.Find("NPC").transform.childCount < 3)//손님 들어올 확률
                 {
-                    Customercreate();
+                    if (Random.Range(0, 10) < 9)
+                    {
+                        Customercreate();
+                    }
                 }
             }
         }//IEnumerable과 햇갈리지 않기

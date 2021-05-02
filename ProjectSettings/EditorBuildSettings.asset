@@ -11,9 +11,12 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Project_C.unity
-    guid: e57f41c22ae0b04418e35c1ee0055e88
+    guid: 802d025255d873e4584067a07b00968f
   - enabled: 1
     path: Assets/Scenes/Advertise.unity
     guid: fb37c76a32b51ab42aef5e92913cf28c
