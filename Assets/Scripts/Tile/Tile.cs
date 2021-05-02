@@ -8,7 +8,6 @@ public class Tile : MonoBehaviour
     // Public
     public int DIRECTION = 0;
     public bool MATCH = false;
-    public bool DESTROY = false;
 
     // Private
     // Tile's coordination
@@ -67,13 +66,13 @@ public class Tile : MonoBehaviour
         if (Mathf.Abs(m_MovedVec.x - m_ClickedVec.x) > Mathf.Abs(m_MovedVec.y - m_ClickedVec.y))
         {
             // X++
-            if (m_MovedVec.x - m_ClickedVec.x > 0)
+            if (m_MovedVec.x - m_ClickedVec.x > 0 && this.GetX() + 1 < Board.Width)
             {
                 DIRECTION = TileStatus.RIGHT;
                 SetTarget(this.x + 1, this.y);
             }
             // X--
-            if (m_MovedVec.x - m_ClickedVec.x < 0)
+            if (m_MovedVec.x - m_ClickedVec.x < 0 && this.GetX() - 1 > 0)
             {
                 DIRECTION = TileStatus.LEFT;
                 SetTarget(this.x - 1, this.y);
@@ -82,13 +81,13 @@ public class Tile : MonoBehaviour
         else
         {
             // Y++
-            if (m_MovedVec.y - m_ClickedVec.y > 0)
+            if (m_MovedVec.y - m_ClickedVec.y > 0 && this.GetY() + 1 < Board.Width)
             {
                 DIRECTION = TileStatus.UP;
                 SetTarget(this.x, this.y + 1);
             }
             // Y--
-            if (m_MovedVec.y - m_ClickedVec.y < 0)
+            if (m_MovedVec.y - m_ClickedVec.y < 0 && this.GetY() - 1 > 0)
             {
                 DIRECTION = TileStatus.DOWN;
                 SetTarget(this.x, this.y - 1);
@@ -151,23 +150,14 @@ public class Tile : MonoBehaviour
     [System.Obsolete]
     private void Match()
     {
-        int beforeCnt = 0;
-
         // X Axis MathUp
         this.MatchUpX();
         // Y Axis MathUp
         this.MatchUpY();
-        // MatchUp put in movedTile
-        if (Board.MatchList.Count != 0)
-        {
-            Board.MatchList.Add(this);
-            beforeCnt = Board.MatchList.Count;
-        }
 
         // TargetTile Axis MathUp
-        if (m_TargetTile.DIRECTION == TileStatus.RIGHT || m_TargetTile.DIRECTION == TileStatus.LEFT) m_TargetTile.MatchUpY();
-        else m_TargetTile.MatchUpX();
-        if (!Board.MatchList.Contains(m_TargetTile) && (Board.MatchList.Count - beforeCnt) >= 2) Board.MatchList.Add(m_TargetTile);
+        m_TargetTile.MatchUpY();
+        m_TargetTile.MatchUpX();
 
         // MatchUped Tile is exist?
         if (UpdateMatchStateOfTiles())
@@ -218,23 +208,53 @@ public class Tile : MonoBehaviour
             }
             else
             {
-                if (matchX[x]["start"] <= y) matchX[x]["start"] = y + 1;
+                if (matchX[x]["start"] == y) matchX[x]["start"] = y + 1;
                 matchX[x]["scale"]++;
             }
         }
-
         foreach (int x in matchX.Keys)
         {
             for (int y = matchX[x]["start"]; y < Board.Height + matchX[x]["scale"]; y++)
             {
-                Board.TileArray[x, y].MoveDown(matchX[x]["scale"]);
-                Board.TileArray[x, y - matchX[x]["scale"]] = Board.TileArray[x, y];
-                Board.TileArray[x, y - matchX[x]["scale"]].SetY(y - matchX[x]["scale"]);
+                if (y - matchX[x]["scale"] < 0)
+                {
+                    int tmpY = y - matchX[x]["scale"];
+                    int upScale = 0;
+                    while (tmpY <= 0)
+                    {
+                        upScale++;
+                        tmpY++;
+                    }
+                    Board.TileArray[x, y].MoveDown(matchX[x]["scale"] + upScale);
+                    Board.TileArray[x, y].SetY(y - matchX[x]["scale"] + upScale);
+                    Board.TileArray[x, y - matchX[x]["scale"] + upScale] = Board.TileArray[x, y];
+                }
+                else
+                {
+                    Board.TileArray[x, y].MoveDown(matchX[x]["scale"]);
+                    Board.TileArray[x, y].SetY(y - matchX[x]["scale"]);
+                    Board.TileArray[x, y - matchX[x]["scale"]] = Board.TileArray[x, y];
+                }
             }
         }
-
         Board.MOVEDOWN = true;
-        // m_TileBehaivour.StartCoroutine(ContinueMatchUp(matchX));
+        m_TileBehaivour.StartCoroutine(ContinueMatchUp(matchX));
+    }
+
+
+    /// <summary>
+    /// (this) Tile move down
+    /// </summary>
+    /// <param name="downScale">how much down coordination(y)</param>
+    [System.Obsolete]
+    private void MoveDown(int downScale)
+    {
+        // Set Active
+        if (this.gameObject.active == false) this.gameObject.SetActive(true);
+
+        // Move Down
+        if (m_TileBehaivour == null) m_TileBehaivour = new TileBehaivour(this.transform);
+        m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMoveDown(this, downScale));
     }
 
     /// <summary>
@@ -273,22 +293,17 @@ public class Tile : MonoBehaviour
         // Delay about Movedown for moving and destroying time
         yield return new WaitForSeconds(TileStatus.DESTROY_DURATION);
 
+        if (Board.MatchList.Count > 0) Board.MatchList.Clear();
         foreach (int x in moveDownX.Keys)
         {
             for (int y = moveDownX[x]["start"] - moveDownX[x]["scale"]; y < Board.Height; y++)
             {
                 Board.TileArray[x, y].MatchUpX();
                 Board.TileArray[x, y].MatchUpY();
-
-                // MatchUp put in movedTile
-                if (Board.MatchList.Count != 0)
-                {
-                    Board.MatchList.Add(this);
-                }
             }
         }
 
-        if (Board.MatchList.Count != 0)
+        if (Board.MatchList.Count > 0)
         {
             // MatchUped Tile is exist?
             if (UpdateMatchStateOfTiles())
@@ -323,17 +338,17 @@ public class Tile : MonoBehaviour
         Tile comparedTile = new Tile();
 
         // Leftside MatchUp
-        for (int x = GetX() - 1; x >= 0; x--)
+        for (int x = this.x - 1; x >= 0; x--)
         {
-            comparedTile = Board.GetTile(x, this.GetY());
+            comparedTile = Board.GetTile(x, this.y);
             if (this.name.Equals(comparedTile.name) && !tmpMatchList.Contains(comparedTile)) tmpMatchList.Add(comparedTile);
             else break;
         }
 
         // Rightside MatchUp
-        for (int x = GetX() + 1; x < Board.Width; x++)
+        for (int x = this.x + 1; x < Board.Width; x++)
         {
-            comparedTile = Board.GetTile(x, this.GetY());
+            comparedTile = Board.GetTile(x, this.y);
             if (this.name.Equals(comparedTile.name) && !tmpMatchList.Contains(comparedTile)) tmpMatchList.Add(comparedTile);
             else break;
         }
@@ -341,8 +356,8 @@ public class Tile : MonoBehaviour
         if (tmpMatchList.Count < 2) tmpMatchList.Clear();
         else
         {
-            for (int idx = 0; idx < tmpMatchList.Count; idx++)
-                if (!Board.MatchList.Contains(tmpMatchList[idx])) Board.MatchList.Add(tmpMatchList[idx]);
+            tmpMatchList.Add(this);
+            foreach (Tile tile in tmpMatchList) if (!Board.MatchList.Contains(tile)) Board.MatchList.Add(tile);
         }
     }
 
@@ -354,17 +369,17 @@ public class Tile : MonoBehaviour
         Tile comparedTile = new Tile();
 
         // Downside MatchUp
-        for (int y = GetY() - 1; y >= 0; y--)
+        for (int y = this.y - 1; y >= 0; y--)
         {
-            comparedTile = Board.GetTile(this.GetX(), y);
+            comparedTile = Board.GetTile(this.x, y);
             if (this.name.Equals(comparedTile.name) && !tmpMatchList.Contains(comparedTile)) tmpMatchList.Add(comparedTile);
             else break;
         }
 
         // Upside MatchUp
-        for (int y = GetY() + 1; y < Board.Height; y++)
+        for (int y = this.y + 1; y < Board.Height; y++)
         {
-            comparedTile = Board.GetTile(this.GetX(), y);
+            comparedTile = Board.GetTile(this.x, y);
             if (this.name.Equals(comparedTile.name) && !tmpMatchList.Contains(comparedTile)) tmpMatchList.Add(comparedTile);
             else break;
         }
@@ -372,23 +387,15 @@ public class Tile : MonoBehaviour
         if (tmpMatchList.Count < 2) tmpMatchList.Clear();
         else
         {
-            for (int idx = 0; idx < tmpMatchList.Count; idx++)
-                if (!Board.MatchList.Contains(tmpMatchList[idx])) Board.MatchList.Add(tmpMatchList[idx]);
+            tmpMatchList.Add(this);
+            foreach (Tile tile in tmpMatchList) if (!Board.MatchList.Contains(tile)) Board.MatchList.Add(tile);
         }
     }
 
-    /// <summary>
-    /// (this) Tile move down
-    /// </summary>
-    /// <param name="downScale">how much down coordination(y)</param>
-    [System.Obsolete]
-    public void MoveDown(int downScale)
+    private void OnDestroy()
     {
-        // Set Active
-        if (this.gameObject.active == false) this.gameObject.SetActive(true);
-
-        // Move Down
-        if (m_TileBehaivour == null) m_TileBehaivour = new TileBehaivour(this.transform);
-        m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMoveDown(this, downScale));
+        Board.MatchList.Remove(this);
+        StopAllCoroutines();
+        CancelInvoke();
     }
 }

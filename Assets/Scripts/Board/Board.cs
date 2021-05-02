@@ -9,7 +9,7 @@ public class Board : MonoBehaviour
     public static Tile[,] TileArray;
     // MatchUp List
     public static List<Tile> MatchList = new List<Tile>();
-    // IsMoveDown?
+    // Is?
     public static bool MOVEDOWN = false;
     // IsAfterMatchUp?
     public static bool AFTERMATCHUP = false;
@@ -51,6 +51,7 @@ public class Board : MonoBehaviour
         if (MOVEDOWN)
         {
             ArrangeReplaceTiles();
+            OverlapTest();
             MOVEDOWN = false;
         }
     }
@@ -127,6 +128,7 @@ public class Board : MonoBehaviour
         }
 
         ArrangeReplaceTiles();
+        OverlapTest();
     }
 
     /// <summary>
@@ -164,19 +166,45 @@ public class Board : MonoBehaviour
         }
     }
 
-    private bool OverlapTile(int x, int y, int a)
+    private bool OverlapTile(int x, int y, int a)//특정 좌표의 중복 여부를 확인해주는 함수 송대석을 저주한다.
     {
         int count = 0;
-        GameObject Base = GameObject.Find("Base").transform.GetChild(3).gameObject;
-        string name = Base.transform.GetChild(8 - y + (8 * x) - 1 + a).name;
-        //x는 0부터 계산 y는 0부터 계산
+        GameObject Base = GameObject.Find("Base").transform.GetChild(2).gameObject;
+        int standard = GameObject.Find("Base").transform.GetChild(2).childCount;
 
-        if (y > 0 && name == Base.transform.GetChild(8 - y + 1 + (8 * x) - 1 + a).name) count++;//위
-        if (y < 7 && name == Base.transform.GetChild(8 - y - 1 + (8 * x) - 1 + a).name) count++;//아래
-        if (x < 7 && name == Base.transform.GetChild(8 - y + (8 * (x + 1)) - 1 + a).name) count++;//오른쪽
-        if (x > 0 && name == Base.transform.GetChild(8 - y + (8 * (x - 1)) - 1 + a).name) count++;//왼쪽
-        
+        string name = Base.transform.GetChild(8 - y + (8 * x) - 1 + a).name;
+
+        if ((8 - y + 1 + (8 * x) - 1 + a) < standard) if (name == Base.transform.GetChild(8 - y + 1 + (8 * x) - 1 + a).name) count++;//위
+        if ((8 - y - 1 + (8 * x) - 1 + a) < standard) if (name == Base.transform.GetChild(8 - y - 1 + (8 * x) - 1 + a).name) count++;//아래
+        if ((8 - y + (8 * (x + 1)) - 1 + a) < standard) if (name == Base.transform.GetChild(8 - y + (8 * (x + 1)) - 1 + a).name) count++;//오른쪽
+        if ((8 - y + (8 * (x - 1)) - 1 + a) < standard) if (name == Base.transform.GetChild(8 - y + (8 * (x - 1)) - 1 + a).name) count++;//왼쪽
+
         if (count > 2) return true;
         else return false;
+    }
+
+    private void OverlapTest()
+    {
+        int x, y;
+        GameObject Base = GameObject.Find("Base").transform.GetChild(2).gameObject;
+
+        for (int j = 0; j < 64; j++)
+        {
+            x = j / 8;
+            y = j % 8;
+            if (OverlapTile(x, y, 64 * 2))
+            {
+                Destroy(Base.transform.GetChild(8 - y + (8 * x) - 1 + (2 * 64)).gameObject);
+
+                GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
+                GameObject newTile = Instantiate(prefab, gameObject.transform.GetChild(8 - y + (8 * x) - 1 + (2 * 64)).position, Quaternion.identity, gameObject.transform) as GameObject;
+                newTile.transform.localScale = new Vector3(60, 60, 0);
+                newTile.transform.SetSiblingIndex(8 - y + (8 * x) - 1 + (2 * 64));
+                newTile.SetActive(false);
+                newTile.name = prefab.name;
+
+                j--;
+            }
+        }
     }
 }

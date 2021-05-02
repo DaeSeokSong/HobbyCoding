@@ -94,8 +94,6 @@ public class TileBehaivour : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         // Destroy
-        destroyedTile.DESTROY = true;
-        Board.MatchList.Remove(destroyedTile);
         Destroy(destroyedTile.gameObject);
     }
 
