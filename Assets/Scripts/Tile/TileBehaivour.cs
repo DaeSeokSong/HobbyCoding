@@ -42,7 +42,7 @@ public class TileBehaivour : MonoBehaviour
 
             yield return null;
         }
-        moved.transform.localPosition = new Vector3(Mathf.Round(to.x / 10) * 10, Mathf.Round(to.y / 10) * 10, to.z);
+        moved.transform.localPosition = to;
 
         yield break;
     }
@@ -71,7 +71,7 @@ public class TileBehaivour : MonoBehaviour
 
             yield return null;
         }
-        moved.transform.localPosition = new Vector3(Mathf.Round(downTo.x / 10) * 10, Mathf.Round(downTo.y / 10) * 10, downTo.z);
+        moved.transform.localPosition = downTo;
         Board.MatchList.Remove(moved);
 
         yield break;

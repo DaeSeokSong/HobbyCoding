@@ -10,8 +10,25 @@ public class ChangeScene : MonoBehaviour
         SceneManager.LoadScene("Advertise");
     }
 
+    public void SceneChange_Budget()
+    {
+        SceneManager.LoadScene("Budget");
+    }
+
+    public void SceneChange_Main()
+    {
+        SceneManager.LoadScene("Project_C");
+    }
+
     public void SceneChange_Pl()
     {
         SceneManager.LoadScene("Police_Line");
     }
+
+    public void SceneChange_Rec()
+    {
+        SceneManager.LoadScene("Recipe");
+    }
+
+
 }

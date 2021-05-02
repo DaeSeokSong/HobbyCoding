@@ -114,11 +114,11 @@ public class Board : MonoBehaviour
 
                 // Set Position
                 // Set Scale
-                tile.transform.localScale = new Vector3(60, 60, 0);
-                background.transform.localScale = new Vector3(100, 100, 0);
+                tile.transform.localScale = new Vector3(70, 70, 0);
+                background.transform.localScale = new Vector3(110, 110, 0);
                 // Compute Position
-                float initX = -310 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2)));
-                float initY = -730 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2)));
+                float initX = -365 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2)));
+                float initY = -790 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2)));
                 // Set Position
                 tile.transform.localPosition = new Vector3(initX, initY, 100);
                 background.transform.localPosition = new Vector3(initX, initY, 200);
@@ -155,10 +155,10 @@ public class Board : MonoBehaviour
                 // Set parent about transform
                 tile.transform.SetParent(this.transform);
                 // Set position
-                tile.transform.localScale = new Vector3(60, 60, 0);
+                tile.transform.localScale = new Vector3(70, 70, 0);
                 // Compute Position
-                float initX = -310 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2)));
-                float initY = -730 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2)));
+                float initX = -365 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2)));
+                float initY = -790 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2)));
                 tile.transform.localPosition = new Vector3(initX, initY, 100);
 
                 TileArray[x, y] = tile;
@@ -198,7 +198,7 @@ public class Board : MonoBehaviour
 
                 GameObject prefab = m_TileTypes[Random.Range(0, m_TileTypes.Length)];
                 GameObject newTile = Instantiate(prefab, gameObject.transform.GetChild(8 - y + (8 * x) - 1 + (2 * 64)).position, Quaternion.identity, gameObject.transform) as GameObject;
-                newTile.transform.localScale = new Vector3(60, 60, 0);
+                newTile.transform.localScale = new Vector3(70, 70, 0);
                 newTile.transform.SetSiblingIndex(8 - y + (8 * x) - 1 + (2 * 64));
                 newTile.SetActive(false);
                 newTile.name = prefab.name;

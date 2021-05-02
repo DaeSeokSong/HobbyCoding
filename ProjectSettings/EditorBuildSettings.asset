@@ -21,6 +21,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Advertise.unity
     guid: fb37c76a32b51ab42aef5e92913cf28c
   - enabled: 1
+    path: Assets/Scenes/Budget.unity
+    guid: 5f30d5d6baf7f5d48870f6da89a20265
+  - enabled: 1
+    path: Assets/Scenes/Recipe.unity
+    guid: 838ae2d9118cff244a7c96a1f352891b
+  - enabled: 1
+    path: Assets/Scenes/Police_Line.unity
+    guid: d1a5afca2a8db6b46ba3bccb550e048e
+  - enabled: 1
     path: Assets/Scenes/On.unity
     guid: 0ea1d4d2828423f4db93107a2b85cd2c
   - enabled: 1
