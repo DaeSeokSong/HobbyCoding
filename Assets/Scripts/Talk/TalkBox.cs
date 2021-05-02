@@ -18,20 +18,9 @@ public class TalkBox : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void OnEnable()
     {
         if(state) StartCoroutine("Talk");
-    }
-
-    void Awake()
-    {
-
     }
 
     public void initTalk()//대화 관련한 Dictionary init
@@ -58,15 +47,13 @@ public class TalkBox : MonoBehaviour
                 }
 
                 yield return ReadLine(i);
-                while (Input.touchCount > 0 || !Input.GetKey(KeyCode.Space)) yield return null;
+                while (!Input.GetMouseButtonDown(0)) yield return null;
             }
             //GameObject.Find("NPC").GetComponent<NPCManger>().stop = false;
+            SceneManager.LoadScene("Project_C");
             state = false;
             gameObject.SetActive(false);
-            SceneManager.LoadScene("Off");
-            
         }
-        
     }
 
     IEnumerator ReadLine(string readtext)

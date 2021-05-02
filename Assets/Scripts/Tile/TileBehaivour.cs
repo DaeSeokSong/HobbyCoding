@@ -60,7 +60,7 @@ public class TileBehaivour : MonoBehaviour
         yield return new WaitForSeconds(TileStatus.DESTROY_DURATION);
 
         // Compute DownTo Vector3
-        Vector3 downTo = new Vector3(moved.transform.localPosition.x, moved.transform.localPosition.y - (downScale * TileStatus.DIAMETER), 100);
+        Vector3 downTo = new Vector3(moved.transform.localPosition.x, moved.transform.localPosition.y - (downScale * TileStatus.DIAMETER), 2);
         Vector3 startPos = moved.transform.localPosition;
 
         float elapsed = 0.0f;

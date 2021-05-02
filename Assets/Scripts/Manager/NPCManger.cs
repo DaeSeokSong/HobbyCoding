@@ -56,7 +56,7 @@ public class NPCManger : MonoBehaviour
             if (!npcPosition[i])
             {
                 npcPosition[i] = true;
-                position = new Vector3(-6f, 2f, 1);
+                position = new Vector3(-6f, 2f, 0.5f);
                 break;
             }
         }
@@ -104,7 +104,7 @@ public class NPCManger : MonoBehaviour
                     Customercreate();
                 }
             }
-        }//IEnumerable과 햇갈리지 않기
+        }
         
     }
     

@@ -120,8 +120,8 @@ public class Board : MonoBehaviour
                 float initX = -365 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2)));
                 float initY = -790 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2)));
                 // Set Position
-                tile.transform.localPosition = new Vector3(initX, initY, 100);
-                background.transform.localPosition = new Vector3(initX, initY, 200);
+                tile.transform.localPosition = new Vector3(initX, initY, 2);
+                background.transform.localPosition = new Vector3(initX, initY, 3);
 
                 TileArray[x, y] = tile;
             }
@@ -159,7 +159,7 @@ public class Board : MonoBehaviour
                 // Compute Position
                 float initX = -365 + ((x * tile.transform.localScale.x) + (x * (tile.transform.localScale.x / 2)));
                 float initY = -790 + ((y * tile.transform.localScale.y) + (y * (tile.transform.localScale.y / 2)));
-                tile.transform.localPosition = new Vector3(initX, initY, 100);
+                tile.transform.localPosition = new Vector3(initX, initY, 2);
 
                 TileArray[x, y] = tile;
             }

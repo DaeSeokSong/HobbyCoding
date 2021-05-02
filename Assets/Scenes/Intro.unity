@@ -123,6 +123,23 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &697472056 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5661601459470160414, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
+  m_PrefabInstance: {fileID: 7367946731102825078}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &697472061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697472056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad1f93c1ea8c6c4aa5cbc4e2208132a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &813944563
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +316,7 @@ Transform:
   m_LocalScale: {x: 0.51, y: 0.52731, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7367946731102825078
 PrefabInstance:
@@ -308,6 +325,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 252705531692644107, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 252705531692644107, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1574357630164962859, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
       propertyPath: m_SizeDelta.x
       value: 683.79
@@ -346,7 +371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6146503115938385918, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6146503115938385918, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
       propertyPath: m_AnchorMax.x
@@ -424,6 +449,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 813944565}
+    - target: {fileID: 6146503115938385919, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
+      propertyPath: m_PixelPerfect
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6782247752082056916, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -440,5 +469,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7367946730968964098, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 8764137987431119355, guid: 5fc68ba7d6ec0e8418e941637955227e, type: 3}
+    m_RemovedComponents:
+    - {fileID: 7367946731569135558, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e7adcc2b336e15e4690285e5da21e1a9, type: 3}
