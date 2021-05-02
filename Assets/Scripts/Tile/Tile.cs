@@ -131,8 +131,6 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void SwapPosition()
     {
-        Debug.Log("m_TargetTile = " + m_TargetTile.name);
-        Debug.Log("this = " + this.name);
         m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMove(this, m_TargetTile.transform.localPosition));
         m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMove(m_TargetTile, this.transform.localPosition));
 
@@ -389,12 +387,8 @@ public class Tile : MonoBehaviour
         // Set Active
         if (this.gameObject.active == false) this.gameObject.SetActive(true);
 
-        // Compute DownTo Vector3
-        Debug.Log("downScale = " + downScale);
-        Vector3 downTo = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y - (downScale * TileStatus.DIAMETER), 100);
-
         // Move Down
         if (m_TileBehaivour == null) m_TileBehaivour = new TileBehaivour(this.transform);
-        m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMoveDown(this, downTo));
+        m_TileBehaivour.StartCoroutine(m_TileBehaivour.CoStartMoveDown(this, downScale));
     }
 }

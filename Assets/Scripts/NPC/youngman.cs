@@ -29,7 +29,7 @@ public class youngman : MonoBehaviour
                 for (int i = 0; i < 3; i++)
                 {
                     gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = sprites[i];
-                    yield return new WaitForSeconds(8f);
+                    yield return new WaitForSeconds(13f);
                 }
                 gameObject.GetComponent<customerdefault>().SelfRemove(false);
                 Destroy(gameObject);

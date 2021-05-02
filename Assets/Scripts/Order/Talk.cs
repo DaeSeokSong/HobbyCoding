@@ -18,9 +18,7 @@ public class Talk : MonoBehaviour
 
     IEnumerator CreditorEvent()
     {
-        yield return new WaitForSeconds(5f);
-        //Debug.Log(GameObject.Find("Open").transform.GetChild(3).gameObject.SetActive(true));
-        GameObject.Find("Open").transform.GetChild(3).GetComponent<TalkBox>().talkBoxOn(1);
-        //GameObject.Find("NPC").GetComponent<NPCManger>().stop = true;
+        yield return new WaitForSeconds(1f);
+        gameObject.transform.GetChild(4).transform.GetChild(0).GetComponent<TalkBox>().talkBoxOn(1);
     }
 }

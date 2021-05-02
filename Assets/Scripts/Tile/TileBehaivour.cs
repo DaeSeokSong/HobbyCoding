@@ -34,13 +34,6 @@ public class TileBehaivour : MonoBehaviour
     {
         Vector3 startPos = moved.transform.localPosition;
 
-        Debug.Log("=====CoStartMove Before=====");
-        Debug.Log("to.x = " + to.x);
-        Debug.Log("to.y = " + to.y);
-        Debug.Log(moved.GetX() + ", " + moved.GetY());
-        Debug.Log(moved.name + " moved.transform.localPosition.x = " + moved.transform.localPosition.x);
-        Debug.Log(moved.name + " moved.transform.localPosition.y = " + moved.transform.localPosition.y);
-
         float elapsed = 0.0f;
         while (elapsed < TileStatus.DURATION)
         {
@@ -50,11 +43,6 @@ public class TileBehaivour : MonoBehaviour
             yield return null;
         }
         moved.transform.localPosition = new Vector3(Mathf.Round(to.x / 10) * 10, Mathf.Round(to.y / 10) * 10, to.z);
-        Debug.Log("=====CoStartMove After=====");
-        Debug.Log(moved.GetX() + ", " + moved.GetY());
-        Debug.Log(moved.name + " moved.transform.localPosition.x = " + moved.transform.localPosition.x);
-        Debug.Log(moved.name + " moved.transform.localPosition.y = " + moved.transform.localPosition.y);
-        Debug.Log("=========================");
 
         yield break;
     }
@@ -66,26 +54,24 @@ public class TileBehaivour : MonoBehaviour
     /// <param name="to">Target tile to move</param>
     /// <returns>Coroutine</returns>
     [System.Obsolete]
-    public IEnumerator CoStartMoveDown(Tile moved, Vector3 to)
+    public IEnumerator CoStartMoveDown(Tile moved, int downScale)
     {
         // Delay about Movedown for moving and destroying time
         yield return new WaitForSeconds(TileStatus.DESTROY_DURATION);
 
+        // Compute DownTo Vector3
+        Vector3 downTo = new Vector3(moved.transform.localPosition.x, moved.transform.localPosition.y - (downScale * TileStatus.DIAMETER), 100);
         Vector3 startPos = moved.transform.localPosition;
-
-        Debug.Log(moved.GetX() + ", " + moved.GetY());
-        Debug.Log(moved.name + " moved.transform.localPosition.x = " + moved.transform.localPosition.x);
-        Debug.Log(moved.name + " moved.transform.localPosition.y = " + moved.transform.localPosition.y);
 
         float elapsed = 0.0f;
         while (elapsed < TileStatus.DURATION)
         {
             elapsed += Time.smoothDeltaTime;
-            moved.transform.localPosition = Vector3.Lerp(startPos, to, elapsed / TileStatus.DURATION);
+            moved.transform.localPosition = Vector3.Lerp(startPos, downTo, elapsed / TileStatus.DURATION);
 
             yield return null;
         }
-        moved.transform.localPosition = new Vector3(Mathf.Round(to.x / 10) * 10, Mathf.Round(to.y / 10) * 10, to.z);
+        moved.transform.localPosition = new Vector3(Mathf.Round(downTo.x / 10) * 10, Mathf.Round(downTo.y / 10) * 10, downTo.z);
         Board.MatchList.Remove(moved);
 
         yield break;

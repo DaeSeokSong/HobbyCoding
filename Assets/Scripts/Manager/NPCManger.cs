@@ -97,14 +97,11 @@ public class NPCManger : MonoBehaviour
         {
             
             yield return new WaitForSeconds(5f);
-            if (!stop)
+            if (GameObject.Find("NPC").transform.childCount < 3)//¼Õ´Ô µé¾î¿Ã È®·ü
             {
-                if (GameObject.Find("NPC").transform.childCount < 3)//¼Õ´Ô µé¾î¿Ã È®·ü
+                if (Random.Range(0, 10) < 9)
                 {
-                    if (Random.Range(0, 10) < 9)
-                    {
-                        Customercreate();
-                    }
+                    Customercreate();
                 }
             }
         }//IEnumerable°ú ÇÞ°¥¸®Áö ¾Ê±â
